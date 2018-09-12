@@ -4,8 +4,6 @@ import FormItem from "antd/lib/form/FormItem";
 import * as React from 'react';
 import { FormEvent } from "react";
 
-import classes from './Reg'
-
 class RegisterForm extends React.Component<FormComponentProps> {
 
   public state = {
