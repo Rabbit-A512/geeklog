@@ -1,0 +1,14 @@
+.Header {
+    background-color: #002141;
+    padding: 10px;
+    font-size: xx-large;
+    color: white
+}
+
+.Sider {
+    background-color: navy;
+}
+
+.ZeroMarginTop {
+    margin-top: 0;
+}

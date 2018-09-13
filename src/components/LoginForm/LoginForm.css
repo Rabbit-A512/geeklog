@@ -1,0 +1,12 @@
+.LoginForm {
+    max-width: 330px;
+    margin: 100px auto;
+}
+
+.LoginForm h2 {
+    text-align: center;
+}
+
+.LoginLogo {
+    font-size: xx-large;
+}

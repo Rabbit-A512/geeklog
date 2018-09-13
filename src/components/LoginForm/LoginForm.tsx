@@ -3,6 +3,8 @@ import { FormComponentProps } from "antd/lib/form";
 import * as React from 'react';
 import { FormEvent } from "react";
 
+import './LoginForm.css';
+
 const FormItem = Form.Item;
 
 class LoginForm extends React.Component<FormComponentProps> {
@@ -19,8 +21,11 @@ class LoginForm extends React.Component<FormComponentProps> {
   public render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <Form onSubmit={this.handleSubmit} style={{maxWidth: '330px', margin: '100px auto'}}>
-
+      <Form onSubmit={this.handleSubmit} className={"LoginForm"}>
+        <h2>
+          <Icon className={'LoginLogo'} type={'smile'} spin={true}/>
+          &nbsp;欢迎
+        </h2>
         <FormItem>
           {getFieldDecorator('username', {
             rules: [

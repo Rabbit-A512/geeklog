@@ -1,8 +1,11 @@
-import { Form, Icon, Input } from "antd";
+import { Button, Card, Form, Icon, Input, Tooltip } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import FormItem from "antd/lib/form/FormItem";
 import * as React from 'react';
 import { FormEvent } from "react";
+
+import './RegisterForm.css';
+import TextArea from "antd/lib/input/TextArea";
 
 class RegisterForm extends React.Component<FormComponentProps> {
 
@@ -47,60 +50,112 @@ class RegisterForm extends React.Component<FormComponentProps> {
   public render() {
     const getFieldDecorator = this.props.form.getFieldDecorator;
     return (
-      <Form onSubmit={this.handleSubmit}>
-        <FormItem>
-          {getFieldDecorator('username', {
-            rules: [
-              {
-                message: '请输入用户名',
-                required: true
-              }
-            ]
-          })(
-            <Input
-              placeholder={'Username'}
-              type={'text'}
-              prefix={<Icon type={'user'} style={{color: '#ccc'}}/>}/>
-          )}
-        </FormItem>
-        <FormItem>
-          {getFieldDecorator('password', {
-            rules: [
-              {
-                message: '请输入密码，密码长度不小于6位且必须包含字母和数字',
-                required: true,
-              },
-              {
-                validator: this.validateToNextPassword
-              }
-            ]
-          })(
-            <Input
-              placeholder={'Password'}
-              type={'password'}
-              prefix={<Icon type={'lock'} style={{color: 'rgba(0, 0, 0, .25)'}}/>}/>
-          )}
-        </FormItem>
-        <FormItem>
-          {getFieldDecorator('confirm', {
-            rules: [
-              {
-                message: '请输入密码，密码长度不小于6位且必须包含字母和数字',
-                required: true,
-              },
-              {
-                validator: this.compareToFirstPassword
-              }
-            ]
-          })(
-            <Input
-              onBlur={this.handleConFirmBlur}
-              placeholder={'Confirm Password'}
-              type={'password'}
-              prefix={<Icon type={'lock'} style={{color: 'rgba(0, 0, 0, .25)'}}/>}/>
-          )}
-        </FormItem>
-      </Form>
+      <Card
+        title={'注册新用户'}
+        style={{
+          maxWidth: '500px',
+          margin: '50px auto'
+        }}
+      >
+        <Form
+          onSubmit={this.handleSubmit}
+          className={'RegisterForm'}
+          style={{
+            margin: '0 50px'
+          }}
+        >
+          <FormItem label={"用户名"}>
+            {getFieldDecorator('username', {
+              rules: [
+                {
+                  message: '请输入用户名',
+                  required: true
+                }
+              ]
+            })(
+              <Input
+                placeholder={'Username'}
+                type={'text'}
+                prefix={<Icon type={'user'} style={{color: '#ccc'}}/>}/>
+            )}
+          </FormItem>
+          <FormItem label={"密码"}>
+            {getFieldDecorator('password', {
+              rules: [
+                {
+                  message: '请输入密码，密码长度不小于6位且必须包含字母和数字',
+                  required: true,
+                },
+                {
+                  validator: this.validateToNextPassword
+                }
+              ]
+            })(
+              <Input
+                placeholder={'Password'}
+                type={'password'}
+                prefix={<Icon type={'lock'} style={{color: 'rgba(0, 0, 0, .25)'}}/>}/>
+            )}
+          </FormItem>
+          <FormItem　label={"确认密码"}>
+            {getFieldDecorator('confirm', {
+              rules: [
+                {
+                  message: '请输入密码，密码长度不小于6位且必须包含字母和数字',
+                  required: true,
+                },
+                {
+                  validator: this.compareToFirstPassword
+                }
+              ]
+            })(
+              <Input
+                onBlur={this.handleConFirmBlur}
+                placeholder={'Confirm Password'}
+                type={'password'}
+                prefix={<Icon type={'lock'} style={{color: 'rgba(0, 0, 0, .25)'}}/>}/>
+            )}
+          </FormItem>
+          <FormItem
+            label={(
+              <span>昵称&nbsp;
+                <Tooltip title={"昵称将作为您在此网站的主要称呼"}>
+                <Icon type={'question-circle-o'}/>
+              </Tooltip>
+            </span>
+            )}>
+            {getFieldDecorator('nickname', {
+              rules: [
+                {
+                  required: true,
+                  message: "请输入昵称"
+                }
+              ]
+            })(
+              <Input type={'text'} placeholder={'轻舞飞扬'}/>
+            )}
+          </FormItem>
+          <FormItem
+            label={(
+              <span>
+              个人简介
+            </span>
+            )}>
+            {getFieldDecorator('bio', {
+              initialValue: '尚未填写...',
+              rules: [
+                {
+                  required: true,
+                  message: ''
+                }
+              ]
+            })(
+              <TextArea/>
+            )}
+          </FormItem>
+          <Button htmlType={'submit'} type={'primary'}>注册</Button>
+        </Form>
+      </Card>
     );
   }
 }
