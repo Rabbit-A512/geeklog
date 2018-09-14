@@ -7,7 +7,7 @@ import Form from "antd/lib/form/Form";
 import FormItem from "antd/lib/form/FormItem";
 import Input from "antd/lib/input/Input";
 import Button from "antd/lib/button/button";
-import { Divider } from "antd";
+import { Card } from "antd";
 
 class ChangePasswordForm extends React.Component<FormComponentProps> {
 
@@ -55,52 +55,62 @@ class ChangePasswordForm extends React.Component<FormComponentProps> {
     const getFieldDecorator = this.props.form.getFieldDecorator;
     return (
       <div>
-        <Divider><h2>修改密码</h2></Divider>
-        <Form onSubmit={this.submitHandler} style={style}>
-          <FormItem label={'旧密码'}>
-            {getFieldDecorator('old_password', {
-              rules: [
-                {
-                  message: '请输入旧密码',
-                  required: true
-                }
-              ]
-            })(
-              <Input type={'password'}/>
-            )}
-          </FormItem>
-          <FormItem label={'新密码'}>
-            {getFieldDecorator('new_password', {
-              rules: [
-                {
-                  message: '请输入新密码',
-                  required: true
-                },
-                {
-                  validator: this.validateToNextPassword
-                }
-              ]
-            })(
-              <Input type={'password'} />
-            )}
-          </FormItem>
-          <FormItem label={'确认新密码'}>
-            {getFieldDecorator('confirm', {
-              rules: [
-                {
-                  message: '请再次输入新密码',
-                  required: true
-                },
-                {
-                  validator: this.compareToFirstPassword
-                }
-              ]
-            })(
-              <Input onBlur={this.handleConfirmBlur} type={'password'} />
-            )}
-          </FormItem>
-          <Button style={{ width: '100%' }} type={'primary'} htmlType={'submit'}>提交</Button>
-        </Form>
+        <Card
+          title={'修改密码'}
+          style={{
+            maxWidth: '500px',
+            margin: '30px auto'
+          }}
+        >
+          <Form
+            onSubmit={this.submitHandler}
+            style={style}
+          >
+            <FormItem label={'旧密码'}>
+              {getFieldDecorator('old_password', {
+                rules: [
+                  {
+                    message: '请输入旧密码',
+                    required: true
+                  }
+                ]
+              })(
+                <Input type={'password'}/>
+              )}
+            </FormItem>
+            <FormItem label={'新密码'}>
+              {getFieldDecorator('new_password', {
+                rules: [
+                  {
+                    message: '请输入新密码',
+                    required: true
+                  },
+                  {
+                    validator: this.validateToNextPassword
+                  }
+                ]
+              })(
+                <Input type={'password'} />
+              )}
+            </FormItem>
+            <FormItem label={'确认新密码'}>
+              {getFieldDecorator('confirm', {
+                rules: [
+                  {
+                    message: '请再次输入新密码',
+                    required: true
+                  },
+                  {
+                    validator: this.compareToFirstPassword
+                  }
+                ]
+              })(
+                <Input onBlur={this.handleConfirmBlur} type={'password'} />
+              )}
+            </FormItem>
+            <Button style={{ width: '100%' }} type={'primary'} htmlType={'submit'}>提交</Button>
+          </Form>
+        </Card>
       </div>
     );
   }

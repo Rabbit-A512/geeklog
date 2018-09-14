@@ -1,19 +1,35 @@
-import { Button, Form, Icon, Input } from 'antd';
-import { FormComponentProps } from "antd/lib/form";
+import { Button, Form, Icon, Input, message } from 'antd';
 import * as React from 'react';
 import { FormEvent } from "react";
 
 import './LoginForm.css';
+import { WrappedFormUtils } from "antd/lib/form/Form";
+import { RouteComponentProps, StaticContext } from "react-router";
+import myServer from '../../myServer';
+import { AxiosError, AxiosResponse } from "axios";
 
 const FormItem = Form.Item;
 
-class LoginForm extends React.Component<FormComponentProps> {
+interface IProps extends RouteComponentProps<any, StaticContext, any>{
+  form: WrappedFormUtils
+}
+
+class LoginForm extends React.Component<IProps> {
 
   public handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    this.props.form.validateFields((error, values) => {
+    this.props.form.validateFields((error: any, values: any) => {
       if (!error) {
         console.log('Login form values:', values);
+        myServer.post('/login')
+          .then((response: AxiosResponse) => {
+            console.log(response.data);
+            this.props.history.push('/');
+          })
+          .catch((netError: AxiosError) => {
+            console.log((netError.response as AxiosResponse).status);
+            message.error('用户名或密码错误！')
+          });
       }
     });
   };
@@ -21,7 +37,13 @@ class LoginForm extends React.Component<FormComponentProps> {
   public render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <Form onSubmit={this.handleSubmit} className={"LoginForm"}>
+      <Form
+        onSubmit={this.handleSubmit}
+        className={"LoginForm"}
+        style={{
+          maxWidth: '600px'
+        }}
+      >
         <h2>
           <Icon className={'LoginLogo'} type={'smile'} spin={true}/>
           &nbsp;欢迎
