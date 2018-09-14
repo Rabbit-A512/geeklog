@@ -71,7 +71,7 @@ class RegisterForm extends React.Component<FormComponentProps> {
               <TextArea/>
             )}
           </FormItem>
-          <Button htmlType={'submit'} type={'primary'}>注册</Button>
+          <Button htmlType={'submit'} type={'primary'}>提交</Button>
         </Form>
       </Card>
     );

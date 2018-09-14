@@ -4,6 +4,7 @@ import { List } from "antd";
 import { FakeArticle } from "../../models/article";
 
 import ArticleCard from '../ArticleCard/ArticleCard';
+import { Link } from "react-router-dom";
 
 class HostestArticles extends React.Component {
 
@@ -37,9 +38,11 @@ class HostestArticles extends React.Component {
           dataSource={this.state.articles}
           renderItem={(item: FakeArticle) => (
             <List.Item>
-              <ArticleCard
-                article={item}
-              />
+              <Link to={`/read-article/${item.id}`}>
+                <ArticleCard
+                  article={item}
+                />
+              </Link>
             </List.Item>
           )}
         />

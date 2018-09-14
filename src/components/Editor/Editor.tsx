@@ -4,12 +4,14 @@ import Form, { FormComponentProps } from "antd/lib/form/Form";
 import FormItem from "antd/lib/form/FormItem";
 import Button from "antd/lib/button/button";
 import { FormEvent } from "react";
-import { Tabs, Select, Card } from "antd";
+import { Tabs, Select, Card, Switch } from "antd";
 import * as ReactMarkdown from 'react-markdown';
 import { UnControlled as CodeMirror } from "react-codemirror2";
 
 import CodeBlock from "./CodeBlock";
 import TextArea from "antd/lib/input/TextArea";
+
+import './Editor.css';
 
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
@@ -18,12 +20,14 @@ class Editor extends React.Component<FormComponentProps> {
   public state = {
     theme: 'monokai',
     title: '你好世界',
+    lineNumbers: true,
     source: `# Hello Markdown
 
 \`\`\`javascript
 var a = 2;
 console.log('Hello, world!');
 \`\`\`
+
 `
   };
 
@@ -35,6 +39,12 @@ console.log('Hello, world!');
   public themeChangeHandler = (value: string) => {
     this.setState({
       theme: value
+    });
+  };
+
+  public toggleLineNumberHandler = (value: boolean) => {
+    this.setState({
+      lineNumbers: value
     });
   };
 
@@ -73,14 +83,15 @@ console.log('Hello, world!');
                 type={'text'} />
             )}
           </FormItem>
-          <FormItem>
+          <FormItem
+            style={{
+              display: 'none'
+            }}
+          >
             {getFieldDecorator('content', {
               initialValue: this.state.source
             })(
               <TextArea
-                style={{
-                  display: 'none'
-                }}
               />
             )}
           </FormItem>
@@ -105,12 +116,19 @@ console.log('Hello, world!');
                 <Option value={'material'}>Material</Option>
                 <Option value={'the-matrix'}>The Matrix</Option>
               </Select>
+              <Switch
+                size={'small'}
+                defaultChecked={true}
+                onChange={this.toggleLineNumberHandler}
+              />
               <CodeMirror
                 value={this.state.source}
                 options={{
                   mode: 'markdown',
                   theme: this.state.theme,
-                  lineNumbers: true
+                  lineNumbers: this.state.lineNumbers,
+                  viewportMargin: Infinity,
+                  placeholder: 'Welcome!'
                 }}
                 onChange={(editor, data, value) => {
                   this.props.form.setFieldsValue({
