@@ -1,4 +1,4 @@
-import { Button, Form, Icon, Input, message } from 'antd';
+import { Button, Col, Form, Icon, Input, message, Row } from 'antd';
 import * as React from 'react';
 import { FormEvent } from "react";
 
@@ -7,6 +7,7 @@ import { WrappedFormUtils } from "antd/lib/form/Form";
 import { RouteComponentProps, StaticContext } from "react-router";
 import myServer from '../../myServer';
 import { AxiosError, AxiosResponse } from "axios";
+import { Link } from "react-router-dom";
 
 const FormItem = Form.Item;
 
@@ -75,7 +76,20 @@ class LoginForm extends React.Component<IProps> {
               prefix={<Icon type={'lock'} style={{color: 'rgba(0, 0, 0, .25)'}}/>}/>
           )}
         </FormItem>
-        <Button type={'primary'} htmlType={'submit'} style={{width: '100%'}}>登录</Button>
+        <Row
+          style={{
+            textAlign: 'center'
+          }}
+        >
+          <Col span={12}>
+            <Button type={'primary'} htmlType={'submit'}>登录</Button>
+          </Col>
+          <Col span={12}>
+            <Link to={'/register'}>
+              <Button htmlType={'button'}>注册</Button>
+            </Link>
+          </Col>
+        </Row>
       </Form>
     );
   }

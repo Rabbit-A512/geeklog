@@ -30,14 +30,16 @@ const appHeader = () => {
           Geeklog
         </Link>
         <Link
-          to={'/feature'}
+          to={'/login'}
           style={{
             ...linkStyle,
             marginLeft: 'auto',
             fontSize: 'large'
           }}
         >
-          <Icon type={'user'}/>
+          <Icon type={'login'}/>
+          &nbsp;
+          登录
         </Link>
       </Header>
   );

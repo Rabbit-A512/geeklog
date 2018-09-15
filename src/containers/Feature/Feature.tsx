@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Menu } from "antd";
 import { Icon, Layout } from "antd";
 import { Link, Route, RouteComponentProps } from "react-router-dom";
-import RegisterForm from "../../components/RegisterForm/RegisterForm";
 import Editor from "../../components/Editor/Editor";
 import ChangePasswordForm from "../../components/ChangePasswordForm/ChangePasswordForm";
 import AvatarUpload from "../../components/AvatarUpload/AvatarUpload";
@@ -43,12 +42,6 @@ class Feature extends React.Component<RouteComponentProps<any, StaticContext, an
               key="sub1"
               title={<span><Icon type="user" /><span>用户</span></span>}
             >
-              <Menu.Item key="4">
-                <Link to={'/feature/register'}>
-                  <Icon type="desktop" />
-                  <span>注册</span>
-                </Link>
-              </Menu.Item>
               <Menu.Item key="5">
                 <Link to={'/feature/new-post'}>
                   <Icon type={'edit'}/>
@@ -83,7 +76,6 @@ class Feature extends React.Component<RouteComponentProps<any, StaticContext, an
         </Sider>
         <Layout>
           <Content style={{ margin: '0 16px', minHeight: '80vh' }}>
-            <Route path={'/feature/register'} component={RegisterForm}/>
             <Route path={'/feature/new-post'} component={Editor}/>
             <Route path={'/feature/change-password'} component={ChangePasswordForm}/>
             <Route path={'/feature/avatar-upload'} component={AvatarUpload}/>

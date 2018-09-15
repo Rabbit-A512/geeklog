@@ -6,6 +6,8 @@ import { FormEvent } from "react";
 
 import './RegisterForm.css';
 import TextArea from "antd/lib/input/TextArea";
+import axios from '../../myServer';
+import { AxiosError, AxiosResponse } from "axios";
 
 class RegisterForm extends React.Component<FormComponentProps> {
 
@@ -18,8 +20,21 @@ class RegisterForm extends React.Component<FormComponentProps> {
     this.props.form.validateFields((error, values) => {
       if (!error) {
         console.log('Register form value:', values);
+        axios.post('/users', values)
+          .then((response: AxiosResponse) => {
+            console.log(response);
+          })
+          .catch((axiosError: AxiosError) => {
+            console.log(axiosError);
+          });
       }
     });
+  };
+
+  public usernameValidator = (rule: any, value: any, callback: any) => {
+    setTimeout(() => {
+      callback(`${value} 已被占用`);
+    }, 2000);
   };
 
   public handleConFirmBlur = (e: any) => {
@@ -70,6 +85,9 @@ class RegisterForm extends React.Component<FormComponentProps> {
                 {
                   message: '请输入用户名',
                   required: true
+                },
+                {
+                  validator: this.usernameValidator
                 }
               ]
             })(
