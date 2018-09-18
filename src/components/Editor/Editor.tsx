@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Input from "antd/lib/input/Input";
-import Form, { FormComponentProps } from "antd/lib/form/Form";
+import Form, { WrappedFormUtils } from "antd/lib/form/Form";
 import FormItem from "antd/lib/form/FormItem";
 import Button from "antd/lib/button/button";
 import { FormEvent } from "react";
@@ -12,16 +12,28 @@ import CodeBlock from "./CodeBlock";
 import TextArea from "antd/lib/input/TextArea";
 
 import './Editor.css';
+import CategorySelector from "../CategorySelector/CategorySelector";
+import { Category } from "../../models/category";
+import axios from '../../utils/myServer';
+import { AxiosResponse } from "axios";
+import { RouteComponentProps } from "react-router";
+import { getCurrentUser } from "../../utils/auth";
 
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
 const OptGroup = Select.OptGroup;
 
-class Editor extends React.Component<FormComponentProps> {
+interface IProps extends RouteComponentProps {
+  form: WrappedFormUtils
+}
+
+class Editor extends React.Component<IProps> {
 
 
   public state = {
     showDrawer: false,
+    category_id: null,
+    categories: Array<Category>(),
     tagEditor: {
       tags: Array<string>(),
       inputVisible: false,
@@ -41,6 +53,12 @@ console.log('Hello, world!');
   };
 
   private input: Input;
+
+  public categoryChangeHandler = (value: number) => {
+    this.setState({
+      category_id: value
+    });
+  };
 
   public tagCloseHandler = (removedTag: string) => {
     const tags = this.state.tagEditor.tags.filter(tag => tag !== removedTag);
@@ -106,8 +124,20 @@ console.log('Hello, world!');
     e.preventDefault();
     this.props.form.validateFields((error, values) => {
       if (!error) {
-        const temp = {...values, tags: this.state.tagEditor.tags.join(',')};
-        console.log('[New Article]', temp);
+
+        const currentUser = getCurrentUser();
+        if (!currentUser) {
+          this.props.history.replace('/login');
+        } else {
+          const temp = {
+            ...values,
+            tags: this.state.tagEditor.tags.join(','),
+            // hard code category_id to 1 as the default value
+            category_id: this.state.category_id || 1,
+            user_id: currentUser.user_id
+          };
+          console.log('[New Article]', temp);
+        }
       }
     });
   };
@@ -123,6 +153,17 @@ console.log('Hello, world!');
       lineNumbers: value
     });
   };
+
+  public componentDidMount() {
+    axios.get('/categories')
+      .then((res: AxiosResponse<{ data: Category[] }>) => {
+        const categories = res.data.data;
+        console.log(categories);
+        this.setState({
+          categories
+        });
+      })
+  }
 
   public render() {
 
@@ -311,6 +352,11 @@ console.log('Hello, world!');
                     </Tag>
                   )}
                 </div>
+                <Divider>文章分类</Divider>
+                <CategorySelector
+                  categories={this.state.categories}
+                  categoryChangeHandler={this.categoryChangeHandler}
+                />
               </Drawer>
               <CodeMirror
                 value={this.state.source}
