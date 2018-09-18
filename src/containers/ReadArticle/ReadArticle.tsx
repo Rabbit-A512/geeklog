@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from "react-router";
-import axios from '../../utils/myServer';
+import axios from '../../utils/server';
 import { Article } from "../../models/article";
 import FullArticle from '../../components/FullArticle/FullArticle';
 import FullComments from '../../components/FullComments/FullComments';

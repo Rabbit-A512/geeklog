@@ -14,7 +14,7 @@ import TextArea from "antd/lib/input/TextArea";
 import './Editor.css';
 import CategorySelector from "../CategorySelector/CategorySelector";
 import { Category } from "../../models/category";
-import axios from '../../utils/myServer';
+import axios from '../../utils/server';
 import { AxiosResponse } from "axios";
 import { RouteComponentProps } from "react-router";
 import { getCurrentUser } from "../../utils/auth";

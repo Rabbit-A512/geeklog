@@ -7,7 +7,7 @@ import * as _ from 'lodash';
 
 import './RegisterForm.css';
 import TextArea from "antd/lib/input/TextArea";
-import axios from '../../utils/myServer';
+import axios from '../../utils/server';
 import { AxiosError, AxiosResponse } from "axios";
 
 class RegisterForm extends React.Component<FormComponentProps> {

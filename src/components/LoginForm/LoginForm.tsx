@@ -5,7 +5,7 @@ import { FormEvent } from "react";
 import './LoginForm.css';
 import { WrappedFormUtils } from "antd/lib/form/Form";
 import { RouteComponentProps, StaticContext } from "react-router";
-import myServer from '../../utils/myServer';
+import server from '../../utils/server';
 import { AxiosError, AxiosResponse } from "axios";
 import { Link } from "react-router-dom";
 
@@ -22,7 +22,7 @@ class LoginForm extends React.Component<IProps> {
     this.props.form.validateFields((error: any, values: any) => {
       if (!error) {
         console.log('Login form values:', values);
-        myServer.post('/login', values)
+        server.post('/login', values)
           .then((response: AxiosResponse) => {
             console.log(response.data);
             localStorage.setItem('token', response.data.data.token);

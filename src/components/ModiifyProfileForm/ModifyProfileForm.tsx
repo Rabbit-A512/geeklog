@@ -7,10 +7,10 @@ import TextArea from "antd/lib/input/TextArea";
 import { getCurrentUser } from "../../utils/auth";
 import { RouteComponentProps } from "react-router";
 import { WrappedFormUtils } from "antd/lib/form/Form";
-import { authServer } from "../../utils/myServer";
+import { getAuthServer } from "../../utils/server";
 import { AxiosError, AxiosResponse } from "axios";
 
-// import { authServer } from '../../utils/myServer';
+// import { authServer } from '../../utils/server';
 
 interface IProps extends RouteComponentProps{
   form: WrappedFormUtils
@@ -30,8 +30,8 @@ class RegisterForm extends React.Component<IProps> {
       this.props.history.replace('/login');
     } else {
       const id = currentUser.user_id;
-
-      authServer.get(`/users/${id}`)
+      const axios = getAuthServer();
+      axios.get(`/users/${id}`)
         .then((res: AxiosResponse) => {
           this.setState({
             nickname: res.data.data.nickname,
@@ -50,7 +50,8 @@ class RegisterForm extends React.Component<IProps> {
     this.props.form.validateFields((error, values) => {
       if (!error) {
         console.log('Register form value:', values);
-        authServer.put(`/users/${this.state.user_id}`, values)
+        const axios = getAuthServer();
+        axios.put(`/users/${this.state.user_id}`, values)
           .then((res: AxiosResponse) => {
             console.log(res);
           })

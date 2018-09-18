@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as _ from 'lodash';
-import axios from '../../utils/myServer';
+import { getAuthServer } from '../../utils/server';
 
 import './ChangePasswordForm.css';
 import { CSSProperties, FormEvent } from "react";
@@ -34,6 +34,7 @@ class ChangePasswordForm extends React.Component<IProps> {
         } else {
           const temp = _.pick(values, ['old_password', 'new_password']);
           const reqBody = {...temp, user_id: user.user_id};
+          const axios = getAuthServer();
           axios.post('/change-password', reqBody)
             .then((res: AxiosResponse) => {
               this.props.history.push(`/feature/user-home/${user.user_id}`);

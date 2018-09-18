@@ -1,17 +1,9 @@
 export interface Comment {
-  comment_id: string | number;
-  user_id: string | number;
-  root_id: string | number;
-  parent_id: string | number;
-  article_id: string | number;
-  created_at: string | number;
+  comment_id: number;
+  user_id: number;
+  root_id: number;
+  parent_id: number;
+  article_id: number;
+  created_at: number;
   content: string;
-}
-
-export interface FakeComment {
-  postId: number;
-  id: number;
-  name: string;
-  email: string;
-  body: string;
 }

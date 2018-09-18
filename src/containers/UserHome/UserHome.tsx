@@ -3,7 +3,7 @@ import { Avatar, Card, Divider, Tabs } from "antd";
 import HostestArticles from "../../components/HostestArticles/HostestArticles";
 import { RouteComponentProps } from "react-router";
 import { User } from "../../models/user";
-import { authServer } from '../../utils/myServer';
+import { getAuthServer } from '../../utils/server';
 import { AxiosError, AxiosResponse } from "axios";
 import * as _ from 'lodash';
 
@@ -19,7 +19,8 @@ class UserHome extends React.Component<RouteComponentProps> {
 
     console.log(this.props.match.params);
 
-    authServer.get(`/users/${(this.props.match.params as any).user_id}`)
+    const axios = getAuthServer();
+    axios.get(`/users/${(this.props.match.params as any).user_id}`)
       .then((res: AxiosResponse) => {
 
         const userRes = _.pick(res.data.data, ['username', 'nickname', 'user_id', 'avatar', 'is_admin']);

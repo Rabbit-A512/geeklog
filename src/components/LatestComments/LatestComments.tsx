@@ -1,20 +1,24 @@
 import * as React from 'react';
-import { FakeComment } from "../../models/comment";
+import { Comment } from "../../models/comment";
 import { List } from "antd";
 import Avatar from "antd/lib/avatar";
-import axios from 'axios';
+import { AxiosResponse } from 'axios';
+import axios from '../../utils/server';
+
+const Item = List.Item;
 
 class LatestComments extends React.Component {
 
   public state = {
-    comments: []
+    comments: Array<Comment>()
   };
 
   public componentDidMount() {
-    axios.get('http://jsonplaceholder.typicode.com/comments')
-      .then(response => {
-        console.log(response.data);
-        const latestComments = response.data.slice(0, 5);
+    // hard code the number of the comments displayed on home page to 5
+    axios.get('/comments/latest/5')
+      .then((res: AxiosResponse<{ data: Comment[] }>) => {
+        console.log(res.data);
+        const latestComments = res.data.data;
         this.setState({
           comments: latestComments
         });
@@ -31,14 +35,14 @@ class LatestComments extends React.Component {
         bordered={true}
         itemLayout={'horizontal'}
         dataSource={this.state.comments}
-        renderItem={(item: FakeComment) => (
-          <List.Item>
+        renderItem={(item: Comment) => (
+          <Item>
             <List.Item.Meta
               avatar={<Avatar icon={'user'}/>}
-              title={item.name}
-              description={item.body}
+              title={`user_id:${item.user_id}`}
+              description={item.content}
             />
-          </List.Item>
+          </Item>
         )}
       />
     );
