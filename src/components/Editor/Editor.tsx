@@ -8,7 +8,7 @@ import { Tabs, Select, Card, Switch, Drawer, Tag, Tooltip, Icon, Divider } from 
 import * as ReactMarkdown from 'react-markdown';
 import { UnControlled as CodeMirror } from "react-codemirror2";
 
-import CodeBlock from "./CodeBlock";
+import CodeBlock from "../CodeBlock/CodeBlock";
 import TextArea from "antd/lib/input/TextArea";
 
 import './Editor.css';

@@ -1,21 +1,22 @@
 import * as React from 'react';
-import axios from 'axios';
+import axios from '../../utils/server';
 import { List } from "antd";
-import { FakeArticle } from "../../models/article";
+import { Article } from "../../models/article";
 
 import ArticleCard from '../ArticleCard/ArticleCard';
 import { Link } from "react-router-dom";
+import { AxiosResponse } from "axios";
 
 class HostestArticles extends React.Component {
 
   public state = {
-    articles: []
+    articles: Array<Article>()
   };
 
   public componentDidMount() {
-    axios.get('http://jsonplaceholder.typicode.com/posts')
-      .then(response => {
-        const hotArticles = response.data.slice(0, 5);
+    axios.get('/articles/hot/5')
+      .then((res: AxiosResponse<{ data: Article[] }>) => {
+        const hotArticles = res.data.data;
         this.setState({
           articles: hotArticles
         });
@@ -36,9 +37,9 @@ class HostestArticles extends React.Component {
           bordered={true}
           header={<h2>最热文章</h2>}
           dataSource={this.state.articles}
-          renderItem={(item: FakeArticle) => (
+          renderItem={(item: Article) => (
             <List.Item>
-              <Link to={`/read-article/${item.id}`}>
+              <Link to={`/read-article/${item.article_id}`}>
                 <ArticleCard
                   article={item}
                 />

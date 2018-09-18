@@ -18,7 +18,7 @@ class ReadArticle extends React.Component<RouteComponentProps> {
 
     // @ts-ignore
     axios.get(`/articles/${this.props.match.params.article_id}`)
-      .then((response: AxiosResponse) => {
+      .then((response: AxiosResponse<{ data: Article }>) => {
         console.log(response);
         this.setState({
           article: response.data.data,
@@ -30,7 +30,7 @@ class ReadArticle extends React.Component<RouteComponentProps> {
 
   public render() {
 
-    const article = {...this.state.article};
+    const article = {...this.state.article} as Article;
 
     return (
       <div
@@ -40,8 +40,8 @@ class ReadArticle extends React.Component<RouteComponentProps> {
           maxWidth: '900px'
         }}
       >
-        <FullArticle article={article as Article}/>
-        <FullComments article_id={(article as Article).article_id}/>
+        <FullArticle article={article}/>
+        <FullComments article_id={article.article_id}/>
       </div>
     );
   }

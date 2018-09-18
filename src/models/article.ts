@@ -13,7 +13,7 @@ export interface Article {
   comment_count: number;
 }
 
-export interface FakeArticle {
+export interface Article {
   userId: number;
   id: number;
   title: string;
