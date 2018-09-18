@@ -1,5 +1,4 @@
 import { Button, Card, Form, Icon, Input, Tooltip } from "antd";
-import { FormComponentProps } from "antd/lib/form";
 import FormItem from "antd/lib/form/FormItem";
 import * as React from 'react';
 import { FormEvent } from "react";
@@ -9,8 +8,14 @@ import './RegisterForm.css';
 import TextArea from "antd/lib/input/TextArea";
 import axios from '../../utils/server';
 import { AxiosError, AxiosResponse } from "axios";
+import { RouteComponentProps } from "react-router";
+import { WrappedFormUtils } from "antd/lib/form/Form";
 
-class RegisterForm extends React.Component<FormComponentProps> {
+interface IProps extends RouteComponentProps{
+  form: WrappedFormUtils
+}
+
+class RegisterForm extends React.Component<IProps> {
 
   public state = {
     confirmDirty: false
@@ -25,6 +30,7 @@ class RegisterForm extends React.Component<FormComponentProps> {
         axios.post('/users', values)
           .then((response: AxiosResponse) => {
             console.log(response);
+            this.props.history.push('/login');
           })
           .catch((axiosError: AxiosError) => {
             console.log(axiosError);
