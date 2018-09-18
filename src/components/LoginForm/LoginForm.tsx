@@ -5,7 +5,7 @@ import { FormEvent } from "react";
 import './LoginForm.css';
 import { WrappedFormUtils } from "antd/lib/form/Form";
 import { RouteComponentProps, StaticContext } from "react-router";
-import myServer from '../../myServer';
+import myServer from '../../utils/myServer';
 import { AxiosError, AxiosResponse } from "axios";
 import { Link } from "react-router-dom";
 
@@ -22,13 +22,14 @@ class LoginForm extends React.Component<IProps> {
     this.props.form.validateFields((error: any, values: any) => {
       if (!error) {
         console.log('Login form values:', values);
-        myServer.post('/login')
+        myServer.post('/login', values)
           .then((response: AxiosResponse) => {
             console.log(response.data);
+            localStorage.setItem('token', response.data.data.token);
             this.props.history.push('/');
           })
           .catch((netError: AxiosError) => {
-            console.log((netError.response as AxiosResponse).status);
+            console.log(netError);
             message.error('用户名或密码错误！')
           });
       }
@@ -42,7 +43,8 @@ class LoginForm extends React.Component<IProps> {
         onSubmit={this.handleSubmit}
         className={"LoginForm"}
         style={{
-          maxWidth: '600px'
+          maxWidth: '800px',
+          width: '300px'
         }}
       >
         <h2>

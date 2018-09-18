@@ -7,7 +7,6 @@ import AppHeader from '../../components/AppHeader/AppHeader';
 import Home from '../../containers/Home/Home';
 import Feature from '../../containers/Feature/Feature';
 import LoginForm from '../../components/LoginForm/LoginForm';
-import UserHome from "../UserHome/UserHome";
 import ReadArticle from "../ReadArticle/ReadArticle";
 import RegisterForm from "../../components/RegisterForm/RegisterForm";
 
@@ -22,10 +21,9 @@ class App extends React.Component {
         <AppHeader/>
         <Switch>
           <Route path={'/feature'} component={Feature}/>
-          <Route path={'/user-home'} component={UserHome} />
           <Route path={'/register'} component={RegisterForm}/>
           <Route path={'/login'} component={LoginForm}/>
-          <Route path={'/read-article/:id'} component={ReadArticle}/>
+          <Route path={'/read-article/:article_id'} component={ReadArticle}/>
           <Route path={'/'} component={Home}/>
         </Switch>
       </Layout>

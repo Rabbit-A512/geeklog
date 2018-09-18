@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps } from "react-router-dom";
 import { StaticContext } from "react-router";
-import { Card, Row, Col } from "antd";
+import { Card, Col, Row } from "antd";
 import LatestComments from "../../components/LatestComments/LatestComments";
 import HostestArticles from "../../components/HostestArticles/HostestArticles";
 
@@ -12,6 +12,7 @@ class Home extends React.Component<RouteComponentProps<any, StaticContext, any>>
   public componentDidMount() {
     console.log(this.props);
     // this.props.history.replace('/login');
+    console.log('ls', localStorage.getItem('a'));
   }
 
   public render() {

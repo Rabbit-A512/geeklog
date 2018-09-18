@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { FakeArticle } from "../../models/article";
+import { Article } from "../../models/article";
 import { Button, Card } from "antd";
 
 const Meta = Card.Meta;
 const ButtonGroup = Button.Group;
 
-class FullArticle extends React.Component<{ article: FakeArticle }> {
+class FullArticle extends React.Component<{ article: Article }> {
   public render() {
     return (
       <Card
@@ -16,13 +16,9 @@ class FullArticle extends React.Component<{ article: FakeArticle }> {
             }}
           >{this.props.article.title}</h2>
         )}
-        style={{
-          margin: '20px auto',
-          width: '70%',
-          maxWidth: '900px'
-        }}
+
       >
-        <p>{this.props.article.body}</p>
+        <p>{this.props.article.content}</p>
         <Meta
           description={(
             <ButtonGroup

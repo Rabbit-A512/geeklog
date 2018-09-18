@@ -8,6 +8,7 @@ import AvatarUpload from "../../components/AvatarUpload/AvatarUpload";
 import ModifyProfileForm from "../../components/ModiifyProfileForm/ModifyProfileForm";
 import { CollapseType } from "antd/lib/layout/Sider";
 import { StaticContext } from "react-router";
+import UserHome from "../UserHome/UserHome";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -76,6 +77,7 @@ class Feature extends React.Component<RouteComponentProps<any, StaticContext, an
         </Sider>
         <Layout>
           <Content style={{ margin: '0 16px', minHeight: '80vh' }}>
+            <Route path={'/feature/user-home/:user_id'} component={UserHome} />
             <Route path={'/feature/new-post'} component={Editor}/>
             <Route path={'/feature/change-password'} component={ChangePasswordForm}/>
             <Route path={'/feature/avatar-upload'} component={AvatarUpload}/>

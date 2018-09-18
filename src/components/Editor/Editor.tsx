@@ -4,7 +4,7 @@ import Form, { FormComponentProps } from "antd/lib/form/Form";
 import FormItem from "antd/lib/form/FormItem";
 import Button from "antd/lib/button/button";
 import { FormEvent } from "react";
-import { Tabs, Select, Card, Switch } from "antd";
+import { Tabs, Select, Card, Switch, Drawer, Tag, Tooltip, Icon, Divider } from "antd";
 import * as ReactMarkdown from 'react-markdown';
 import { UnControlled as CodeMirror } from "react-codemirror2";
 
@@ -15,9 +15,18 @@ import './Editor.css';
 
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
+const OptGroup = Select.OptGroup;
 
 class Editor extends React.Component<FormComponentProps> {
+
+
   public state = {
+    showDrawer: false,
+    tagEditor: {
+      tags: Array<string>(),
+      inputVisible: false,
+      inputValue: '',
+    },
     theme: 'monokai',
     title: '你好世界',
     lineNumbers: true,
@@ -31,9 +40,76 @@ console.log('Hello, world!');
 `
   };
 
+  private input: Input;
+
+  public tagCloseHandler = (removedTag: string) => {
+    const tags = this.state.tagEditor.tags.filter(tag => tag !== removedTag);
+    console.log(tags);
+
+    const tagEditor = {...this.state.tagEditor};
+    tagEditor.tags = tags;
+    this.setState({
+      tagEditor
+    });
+  };
+
+  public showInput = () => {
+    const tagEditor = {...this.state.tagEditor};
+    tagEditor.inputVisible = true;
+    this.setState({tagEditor}, () => this.input.focus());
+  };
+
+  public inputChangeHandler = (e: any) => {
+    const tagEditor = {...this.state.tagEditor};
+    console.log(e);
+    console.log(typeof e);
+    tagEditor.inputValue = e.target.value;
+    this.setState({
+      tagEditor
+    })
+  };
+
+  public inputConfirmHandler = () => {
+    let tagEditor = {...this.state.tagEditor};
+    const inputValue = tagEditor.inputValue;
+    let tags = tagEditor.tags;
+    if (inputValue && tags.indexOf(inputValue) === -1) {
+      tags = [...tags, inputValue]
+    }
+
+    console.log(tags);
+    tagEditor = {
+      tags,
+      inputValue: '',
+      inputVisible: false
+    };
+    this.setState({
+      tagEditor
+    })
+  };
+
+  public saveInputRef = (input: Input) => this.input = input;
+
+  public showDrawer = () => {
+    this.setState({
+      showDrawer: true
+    });
+  };
+
+  public drawerCloseHandler = () => {
+    this.setState({
+      showDrawer: false
+    });
+  };
+
   public formSubmitHandler = (e: FormEvent) => {
     e.preventDefault();
-    console.log(this.props.form.getFieldsValue());
+    this.props.form.validateFields((error, values) => {
+      if (!error) {
+        const temp = {...values, tags: this.state.tagEditor.tags.join(',')};
+        console.log('[New Article]', temp);
+      }
+    });
   };
 
   public themeChangeHandler = (value: string) => {
@@ -51,6 +127,8 @@ console.log('Hello, world!');
   public render() {
 
     const getFieldDecorator = this.props.form.getFieldDecorator;
+
+    const { tags, inputVisible, inputValue } = this.state.tagEditor;
 
     return (
       <div>
@@ -95,7 +173,61 @@ console.log('Hello, world!');
               />
             )}
           </FormItem>
+          <div
+            style={{
+              marginBottom: '10px'
+            }}
+          >
+            {tags.map((tag, index) => {
+              const isLongTag = tag.length > 20;
+              const tagElem = (
+                <Tag
+                  key={tag}
+                  closable={true}
+                  afterClose={() => this.tagCloseHandler(tag)}
+                >
+                  {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                </Tag>
+              );
+              return isLongTag ? <Tooltip title={tag} key={tag}>{tagElem}</Tooltip> : tagElem;
+            })}
+            {inputVisible && (
+              <Input
+                ref={this.saveInputRef}
+                type={'text'}
+                size={'small'}
+                style={{width: 78}}
+                value={inputValue}
+                onChange={this.inputChangeHandler}
+                onBlur={this.inputConfirmHandler}
+                onPressEnter={this.inputConfirmHandler}
+              />
+            )}
+            {!inputVisible && (
+              <Tag
+                onClick={this.showInput}
+                style={{
+                  backgroundColor: '#fff',
+                  borderStyle: 'dashed'
+                }}
+              >
+                <Icon type={'plus'}/> 新标签
+              </Tag>
+            )}
+          </div>
           <Tabs
+            tabBarExtraContent={(
+              <Button
+                htmlType={'button'}
+                type={'dashed'}
+                onClick={this.showDrawer}
+                style={{
+                  marginBottom: '10px'
+                }}
+              >
+                <Icon type={'sliders'}/>控制面板
+              </Button>
+            )}
             defaultActiveKey={'1'}
             type={'card'}
             style={{
@@ -103,24 +235,83 @@ console.log('Hello, world!');
             }}
           >
             <TabPane tab={'编辑'} key={'1'}>
-              <Select
-                defaultValue={'monokai'}
-                onChange={this.themeChangeHandler}
-                style={{
-                  width: '200px',
-                  marginBottom: '10px',
-                  marginLeft: 'auto'
-                }}
+              <Drawer
+                title={'控制面板'}
+                visible={this.state.showDrawer}
+                placement={'right'}
+                closable={false}
+                onClose={this.drawerCloseHandler}
               >
-                <Option value={'monokai'}>Monokai</Option>
-                <Option value={'material'}>Material</Option>
-                <Option value={'the-matrix'}>The Matrix</Option>
-              </Select>
-              <Switch
-                size={'small'}
-                defaultChecked={true}
-                onChange={this.toggleLineNumberHandler}
-              />
+                <Divider>主题</Divider>
+                <Select
+                  defaultValue={'monokai'}
+                  onChange={this.themeChangeHandler}
+                  style={{
+                    width: '200px',
+                    marginBottom: '10px',
+                    marginLeft: 'auto'
+                  }}
+                >
+                  <OptGroup label={'暗色主题'}>
+                    <Option value={'monokai'}>Monokai</Option>
+                    <Option value={'material'}>Material</Option>
+                    <Option value={'the-matrix'}>The Matrix</Option>
+                  </OptGroup>
+                  <OptGroup label={'亮色主题'}>
+                    <Option value={'mdn-like'}>mdn-like</Option>
+                    <Option value={'paraiso-light'}>paraiso-light</Option>
+                    <Option value={'base16-light'}>base16-light</Option>
+                  </OptGroup>
+                </Select>
+                <Divider>行号</Divider>
+                <div>
+                  <span>是否显示行号</span>&nbsp;
+                  <Switch
+                    size={'small'}
+                    defaultChecked={true}
+                    onChange={this.toggleLineNumberHandler}
+                  />
+                </div>
+                <Divider>标签</Divider>
+                <div>
+                  {tags.map((tag, index) => {
+                    const isLongTag = tag.length > 20;
+                    const tagElem = (
+                      <Tag
+                        key={tag}
+                        closable={true}
+                        afterClose={() => this.tagCloseHandler(tag)}
+                      >
+                        {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                      </Tag>
+                    );
+                    return isLongTag ? <Tooltip title={tag} key={tag}>{tagElem}</Tooltip> : tagElem;
+                  })}
+                  {inputVisible && (
+                    <Input
+                      ref={this.saveInputRef}
+                      type={'text'}
+                      size={'small'}
+                      style={{width: 78}}
+                      value={inputValue}
+                      onChange={this.inputChangeHandler}
+                      onBlur={this.inputConfirmHandler}
+                      onPressEnter={this.inputConfirmHandler}
+                    />
+                  )}
+                  {!inputVisible && (
+                    <Tag
+                      onClick={this.showInput}
+                      style={{
+                        backgroundColor: '#fff',
+                        borderStyle: 'dashed'
+                      }}
+                    >
+                      <Icon type={'plus'}/> 新标签
+                    </Tag>
+                  )}
+                </div>
+              </Drawer>
               <CodeMirror
                 value={this.state.source}
                 options={{

@@ -1,10 +1,38 @@
 import * as React from 'react';
 import { Avatar, Card, Divider, Tabs } from "antd";
 import HostestArticles from "../../components/HostestArticles/HostestArticles";
+import { RouteComponentProps } from "react-router";
+import { User } from "../../models/user";
+import { authServer } from '../../utils/myServer';
+import { AxiosError, AxiosResponse } from "axios";
+import * as _ from 'lodash';
 
 const TabPane = Tabs.TabPane;
 
-class UserHome extends React.Component {
+class UserHome extends React.Component<RouteComponentProps> {
+
+  public state: { user: User | null } = {
+    user: null
+  };
+
+  public componentDidMount() {
+
+    console.log(this.props.match.params);
+
+    authServer.get(`/users/${(this.props.match.params as any).user_id}`)
+      .then((res: AxiosResponse) => {
+
+        const userRes = _.pick(res.data.data, ['username', 'nickname', 'user_id', 'avatar', 'is_admin']);
+
+        this.setState({
+          user: userRes
+        });
+      })
+      .catch((error: AxiosError) => {
+        console.log(error);
+      });
+  }
+
   public render() {
     return (
       <div
@@ -19,8 +47,8 @@ class UserHome extends React.Component {
         >
           <Card.Meta
             avatar={<Avatar icon={'user'} size={'large'}/>}
-            title={'syf'}
-            description={'A developer.'}
+            title={this.state.user ? this.state.user.username : 'none'}
+            description={this.state.user ? this.state.user.bio : 'none'}
           />
         </Card>
         <Divider/>

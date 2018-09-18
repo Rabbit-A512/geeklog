@@ -3,10 +3,11 @@ import { FormComponentProps } from "antd/lib/form";
 import FormItem from "antd/lib/form/FormItem";
 import * as React from 'react';
 import { FormEvent } from "react";
+import * as _ from 'lodash';
 
 import './RegisterForm.css';
 import TextArea from "antd/lib/input/TextArea";
-import axios from '../../myServer';
+import axios from '../../utils/myServer';
 import { AxiosError, AxiosResponse } from "axios";
 
 class RegisterForm extends React.Component<FormComponentProps> {
@@ -19,6 +20,7 @@ class RegisterForm extends React.Component<FormComponentProps> {
     e.preventDefault();
     this.props.form.validateFields((error, values) => {
       if (!error) {
+        values = _.omit(values, ['confirm']);
         console.log('Register form value:', values);
         axios.post('/users', values)
           .then((response: AxiosResponse) => {
@@ -85,9 +87,6 @@ class RegisterForm extends React.Component<FormComponentProps> {
                 {
                   message: '请输入用户名',
                   required: true
-                },
-                {
-                  validator: this.usernameValidator
                 }
               ]
             })(

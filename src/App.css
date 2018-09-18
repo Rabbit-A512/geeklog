@@ -3,3 +3,6 @@
 @import '~codemirror/theme/material.css';
 @import '~codemirror/theme/the-matrix.css';
 @import "~codemirror/theme/monokai.css";
+@import "~codemirror/theme/mdn-like.css";
+@import "~codemirror/theme/paraiso-light.css";
+@import "~codemirror/theme/base16-light.css";

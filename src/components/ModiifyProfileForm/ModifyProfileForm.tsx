@@ -1,18 +1,62 @@
 import { Button, Card, Form, Icon, Input, Tooltip } from "antd";
-import { FormComponentProps } from "antd/lib/form";
 import FormItem from "antd/lib/form/FormItem";
 import * as React from 'react';
 import { FormEvent } from "react";
 
 import TextArea from "antd/lib/input/TextArea";
+import { getCurrentUser } from "../../utils/auth";
+import { RouteComponentProps } from "react-router";
+import { WrappedFormUtils } from "antd/lib/form/Form";
+import { authServer } from "../../utils/myServer";
+import { AxiosError, AxiosResponse } from "axios";
 
-class RegisterForm extends React.Component<FormComponentProps> {
+// import { authServer } from '../../utils/myServer';
+
+interface IProps extends RouteComponentProps{
+  form: WrappedFormUtils
+}
+
+class RegisterForm extends React.Component<IProps> {
+
+  public state = {
+    user_id: null,
+    nickname: null,
+    bio: null
+  };
+
+  public componentDidMount() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+      this.props.history.replace('/login');
+    } else {
+      const id = currentUser.user_id;
+
+      authServer.get(`/users/${id}`)
+        .then((res: AxiosResponse) => {
+          this.setState({
+            nickname: res.data.data.nickname,
+            bio: res.data.data.bio,
+            user_id: id
+          });
+        })
+        .catch((err: AxiosError) => {
+          console.log(err);
+        });
+    }
+  }
 
   public handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     this.props.form.validateFields((error, values) => {
       if (!error) {
         console.log('Register form value:', values);
+        authServer.put(`/users/${this.state.user_id}`, values)
+          .then((res: AxiosResponse) => {
+            console.log(res);
+          })
+          .catch((axiosError: AxiosError) => {
+            console.log(axiosError);
+          });
       }
     });
   };
@@ -43,6 +87,7 @@ class RegisterForm extends React.Component<FormComponentProps> {
             </span>
             )}>
             {getFieldDecorator('nickname', {
+              initialValue: this.state.nickname,
               rules: [
                 {
                   required: true,
@@ -60,13 +105,7 @@ class RegisterForm extends React.Component<FormComponentProps> {
             </span>
             )}>
             {getFieldDecorator('bio', {
-              initialValue: '尚未填写...',
-              rules: [
-                {
-                  required: true,
-                  message: ''
-                }
-              ]
+              initialValue: this.state.bio
             })(
               <TextArea/>
             )}

@@ -1,15 +1,23 @@
 import * as React from 'react';
+import * as _ from 'lodash';
+import axios from '../../utils/myServer';
 
 import './ChangePasswordForm.css';
-import { FormComponentProps } from "antd/lib/form";
 import { CSSProperties, FormEvent } from "react";
-import Form from "antd/lib/form/Form";
+import Form, { WrappedFormUtils } from "antd/lib/form/Form";
 import FormItem from "antd/lib/form/FormItem";
 import Input from "antd/lib/input/Input";
 import Button from "antd/lib/button/button";
 import { Card } from "antd";
+import { getCurrentUser } from "../../utils/auth";
+import { RouteComponentProps } from "react-router";
+import { AxiosError, AxiosResponse } from "axios";
 
-class ChangePasswordForm extends React.Component<FormComponentProps> {
+interface IProps extends RouteComponentProps{
+  form: WrappedFormUtils
+}
+
+class ChangePasswordForm extends React.Component<IProps> {
 
   public state = {
     confirmDirty: false
@@ -18,6 +26,24 @@ class ChangePasswordForm extends React.Component<FormComponentProps> {
   public submitHandler = (e: FormEvent) => {
     e.preventDefault();
     console.log(this.props.form);
+    this.props.form.validateFields(((errors, values) => {
+      if (!errors) {
+        const user = getCurrentUser();
+        if (!user) {
+          this.props.history.replace('/login');
+        } else {
+          const temp = _.pick(values, ['old_password', 'new_password']);
+          const reqBody = {...temp, user_id: user.user_id};
+          axios.post('/change-password', reqBody)
+            .then((res: AxiosResponse) => {
+              this.props.history.push(`/feature/user-home/${user.user_id}`);
+            })
+            .catch((error: AxiosError) => {
+              console.log(error);
+            });
+        }
+      }
+    }));
   };
 
   public handleConfirmBlur = (e: any) => {

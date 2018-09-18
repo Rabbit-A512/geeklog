@@ -6,6 +6,8 @@
     "antd": "^3.9.2",
     "axios": "^0.18.0",
     "codemirror": "^5.40.0",
+    "jsonwebtoken": "^8.3.0",
+    "lodash": "^4.17.11",
     "react": "^16.5.0",
     "react-codemirror2": "^5.1.0",
     "react-dom": "^16.5.0",
@@ -24,6 +26,8 @@
   "devDependencies": {
     "@types/codemirror": "^0.0.60",
     "@types/jest": "^23.3.2",
+    "@types/jsonwebtoken": "^7.2.8",
+    "@types/lodash": "^4.14.116",
     "@types/node": "^10.9.4",
     "@types/react": "^16.4.14",
     "@types/react-dom": "^16.0.7",
