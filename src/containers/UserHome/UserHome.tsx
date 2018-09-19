@@ -23,7 +23,7 @@ class UserHome extends React.Component<RouteComponentProps> {
     axios.get(`/users/${(this.props.match.params as any).user_id}`)
       .then((res: AxiosResponse) => {
 
-        const userRes = _.pick(res.data.data, ['username', 'nickname', 'user_id', 'avatar', 'is_admin']);
+        const userRes = _.pick(res.data.data, ['username', 'nickname', 'user_id', 'avatar', 'is_admin', 'bio']);
 
         this.setState({
           user: userRes
@@ -48,7 +48,7 @@ class UserHome extends React.Component<RouteComponentProps> {
         >
           <Card.Meta
             avatar={<Avatar icon={'user'} size={'large'}/>}
-            title={this.state.user ? this.state.user.username : 'none'}
+            title={this.state.user ? this.state.user.nickname : 'none'}
             description={this.state.user ? this.state.user.bio : 'none'}
           />
         </Card>
