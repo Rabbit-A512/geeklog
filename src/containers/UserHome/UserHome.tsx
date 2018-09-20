@@ -17,13 +17,12 @@ class UserHome extends React.Component<RouteComponentProps> {
 
   public componentDidMount() {
 
-    console.log(this.props.match.params);
-
     const axios = getAuthServer();
     axios.get(`/users/${(this.props.match.params as any).user_id}`)
       .then((res: AxiosResponse) => {
 
         const userRes = _.pick(res.data.data, ['username', 'nickname', 'user_id', 'avatar', 'is_admin', 'bio']);
+        console.log(userRes);
 
         this.setState({
           user: userRes

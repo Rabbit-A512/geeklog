@@ -1,12 +1,7 @@
 import * as React from 'react';
 import { Upload, Icon, message, Card } from 'antd';
 import { UploadFile } from "antd/lib/upload/interface";
-
-function getBase64(img: Blob, callback: any) {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
+import { getCurrentUser } from "../../utils/auth";
 
 function beforeUpload(file: UploadFile) {
   const isJPG = file.type === 'image/jpeg';
@@ -32,10 +27,11 @@ class AvatarUpload extends React.Component {
       return;
     }
     if (info.file.status === 'done') {
-      getBase64(info.file.originFileObj, (imageUrl: string) => this.setState({
-        imageUrl,
-        loading: false
-      }))
+      // getBase64(info.file.originFileObj, (imageUrl: string) => this.setState({
+      //   imageUrl,
+      //   loading: false
+      // }))
+      console.log(info.file.response);
     }
   };
 
@@ -48,6 +44,8 @@ class AvatarUpload extends React.Component {
     );
 
     const imageUrl = this.state.imageUrl;
+    const currentUser = getCurrentUser();
+
     return (
       <Card
         title={'上传新的头像'}
@@ -58,9 +56,12 @@ class AvatarUpload extends React.Component {
       >
         <Upload
           name={'avatar'}
+          headers={{
+            Authorization: localStorage.getItem('token') || ''
+          }}
           listType={'picture-card'}
           showUploadList={false}
-          action={'//jsonplaceholder.typicode.com/posts/'}
+          action={`http://47.106.158.254/avatars/${currentUser.user_id}`}
           beforeUpload={beforeUpload}
           onChange={this.handleChange}
         >

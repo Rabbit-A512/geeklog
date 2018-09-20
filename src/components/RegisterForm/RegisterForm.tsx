@@ -1,4 +1,4 @@
-import { Button, Card, Form, Icon, Input, Tooltip } from "antd";
+import { Button, Card, Form, Icon, Input, message, Tooltip } from "antd";
 import FormItem from "antd/lib/form/FormItem";
 import * as React from 'react';
 import { FormEvent } from "react";
@@ -30,7 +30,16 @@ class RegisterForm extends React.Component<IProps> {
         axios.post('/users', values)
           .then((response: AxiosResponse) => {
             console.log(response);
-            this.props.history.push('/login');
+            if (response.data.code === 643) {
+              message.warn('用户已注册');
+              this.props.form.setFields({
+                username: {
+                  errors: ['用户已注册']
+                }
+              });
+            } else {
+              this.props.history.push('/login');
+            }
           })
           .catch((axiosError: AxiosError) => {
             console.log(axiosError);

@@ -4,7 +4,6 @@ import { StaticContext } from "react-router";
 import { Card, Col, Row } from "antd";
 import LatestComments from "../../components/LatestComments/LatestComments";
 import HostestArticles from "../../components/HostestArticles/HostestArticles";
-import axios from "axios";
 
 const Meta = Card.Meta;
 
@@ -14,10 +13,6 @@ class Home extends React.Component<RouteComponentProps<any, StaticContext, any>>
     console.log(this.props);
     // this.props.history.replace('/login');
     console.log('ls', localStorage.getItem('a'));
-  }
-
-  public componentWillUnmount() {
-    axios.CancelToken.source().cancel();
   }
 
   public render() {

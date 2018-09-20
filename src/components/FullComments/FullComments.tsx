@@ -1,11 +1,10 @@
 import * as React from 'react';
 import TextArea from "antd/lib/input/TextArea";
-import { Button, Card, Divider, Form, List, message } from "antd";
+import { Button, Card, Divider, Form, List, message, Pagination } from "antd";
 import server from '../../utils/server';
 import { getAuthServer } from "../../utils/server";
 import { AxiosError, AxiosResponse } from "axios";
 import { Comment } from "../../models/comment";
-import axios from 'axios';
 
 import CommentCard from '../CommentCard/CommentCard';
 import { WrappedFormUtils } from "antd/lib/form/Form";
@@ -22,24 +21,37 @@ interface IProps{
 interface IState {
   comments: Comment[];
   modalVisible: boolean;
+  page: number;
+  size: number;
+  total: number;
 }
 
 class FullComments extends React.Component<IProps> {
 
   public state: IState = {
     comments: Array<Comment>(),
-    modalVisible: false
+    modalVisible: false,
+    page: 1,
+    size: 5,
+    total: 0
   };
 
-  public loadComments = () => {
-    server.get(`/articles/${this.props.article_id}/comments?page=1&size=10`)
+  public loadComments = (page: number) => {
+    server.get(`/articles/${this.props.article_id}/comments?page=${page}&size=${this.state.size}`)
       .then((res: AxiosResponse) => {
-        const comments = res.data.data.entities;
+        const comments = res.data.data ? res.data.data.entities : [];
+        const size = this.state.size;
+        const total = res.data.data ? Math.ceil(res.data.data.total / size) : 0;
         console.log(comments);
         this.setState({
-          comments
+          comments,
+          total
         });
       })
+  };
+
+  public handlePageSizeChange = (page: number, size: number) => {
+    this.loadComments(page);
   };
 
   public handleCommentSubmit = () => {
@@ -61,7 +73,7 @@ class FullComments extends React.Component<IProps> {
         authServer.post('/comments', reqBody)
           .then((res: AxiosResponse) => {
             console.log(res);
-            this.loadComments();
+            this.loadComments(1);
           })
           .catch((error: AxiosError) => {
             console.log(error);
@@ -74,11 +86,7 @@ class FullComments extends React.Component<IProps> {
   };
 
   public componentDidMount() {
-    this.loadComments();
-  }
-
-  public componentWillUnmount() {
-    axios.CancelToken.source().cancel();
+    this.loadComments(1);
   }
 
   public render() {
@@ -102,10 +110,18 @@ class FullComments extends React.Component<IProps> {
                 }}
               >
                 <CommentCard
+                  loadRootComments={() => null}
+                  show_sub={true}
                   comment={item}
                 />
               </Item>
             )}
+          />
+
+          <Pagination
+            pageSize={this.state.size}
+            onChange={this.handlePageSizeChange}
+            total={this.state.total}
           />
 
           <Divider orientation={'left'}>发表评论</Divider>

@@ -50,7 +50,7 @@ class AppHeader extends React.Component<RouteComponentProps> {
       dropdown = (
         <Dropdown overlay={menu}>
         <span>
-          {currentUser.username}&nbsp;
+          {currentUser.nickname}&nbsp;
           <Icon type={'down'}/>
         </span>
         </Dropdown>
