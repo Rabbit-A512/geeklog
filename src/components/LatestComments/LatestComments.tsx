@@ -3,7 +3,8 @@ import { Comment } from "../../models/comment";
 import { List } from "antd";
 import Avatar from "antd/lib/avatar";
 import { AxiosResponse } from 'axios';
-import axios from '../../utils/server';
+import server from '../../utils/server';
+import axios from 'axios';
 
 const Item = List.Item;
 
@@ -15,7 +16,7 @@ class LatestComments extends React.Component {
 
   public componentDidMount() {
     // hard code the number of the comments displayed on home page to 5
-    axios.get('/comments/latest/5')
+    server.get('/comments/latest/5')
       .then((res: AxiosResponse<{ data: Comment[] }>) => {
         console.log(res.data);
         const latestComments = res.data.data;
@@ -26,6 +27,10 @@ class LatestComments extends React.Component {
       .catch(error => {
         console.log(error);
       });
+  }
+
+  public componentWillUnmount() {
+    axios.CancelToken.source().cancel();
   }
 
   public render() {

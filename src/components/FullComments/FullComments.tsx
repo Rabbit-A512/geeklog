@@ -2,18 +2,21 @@ import * as React from 'react';
 import TextArea from "antd/lib/input/TextArea";
 import { Button, Card, Divider, Form, List, message } from "antd";
 import server from '../../utils/server';
-import { AxiosResponse } from "axios";
+import { getAuthServer } from "../../utils/server";
+import { AxiosError, AxiosResponse } from "axios";
 import { Comment } from "../../models/comment";
 import axios from 'axios';
 
 import CommentCard from '../CommentCard/CommentCard';
 import { WrappedFormUtils } from "antd/lib/form/Form";
+import { getCurrentUser } from "../../utils/auth";
 
 const Item = List.Item;
 
-interface IProps {
+interface IProps{
   article_id: number;
   form: WrappedFormUtils;
+  onCommentSendFailure(error: AxiosError): void;
 }
 
 interface IState {
@@ -28,10 +31,42 @@ class FullComments extends React.Component<IProps> {
     modalVisible: false
   };
 
+  public loadComments = () => {
+    server.get(`/articles/${this.props.article_id}/comments?page=1&size=10`)
+      .then((res: AxiosResponse) => {
+        const comments = res.data.data.entities;
+        console.log(comments);
+        this.setState({
+          comments
+        });
+      })
+  };
+
   public handleCommentSubmit = () => {
     this.props.form.validateFields((errors, values) => {
       if (!errors) {
         console.log(values);
+
+        const currentUser = getCurrentUser();
+
+        const reqBody = {
+          user_id: currentUser.user_id,
+          article_id: this.props.article_id,
+          parent_id: null,
+          content: values.comment
+        };
+
+        const authServer = getAuthServer();
+
+        authServer.post('/comments', reqBody)
+          .then((res: AxiosResponse) => {
+            console.log(res);
+            this.loadComments();
+          })
+          .catch((error: AxiosError) => {
+            console.log(error);
+            this.props.onCommentSendFailure(error);
+          });
       } else {
         message.warn('评论不能为空！');
       }
@@ -39,16 +74,7 @@ class FullComments extends React.Component<IProps> {
   };
 
   public componentDidMount() {
-
-    console.log('[fullComment]', this.props.article_id);
-
-    server.get(`/articles/${this.props.article_id}/comments?page=1&size=10`)
-      .then((res: AxiosResponse<{ data: Comment[] }>) => {
-        const comments = res.data.data;
-        this.setState({
-          comments
-        });
-      })
+    this.loadComments();
   }
 
   public componentWillUnmount() {

@@ -4,7 +4,7 @@ import axios from '../../utils/server';
 import { Article } from "../../models/article";
 import FullArticle from '../../components/FullArticle/FullArticle';
 import FullComments from '../../components/FullComments/FullComments';
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { Skeleton } from "antd";
 
 interface IState {
@@ -33,6 +33,11 @@ class ReadArticle extends React.Component<RouteComponentProps> {
 
   }
 
+  public handleCommentSendFailure = (error: AxiosError) => {
+    // this.props.history.push('/login');
+    console.log(error);
+  };
+
   public render() {
 
     const article = {...this.state.article} as Article;
@@ -55,7 +60,10 @@ class ReadArticle extends React.Component<RouteComponentProps> {
         >
           <FullArticle article={article}/>
         </Skeleton>
-        <FullComments article_id={(this.props.match.params as any).article_id}/>
+        <FullComments
+          onCommentSendFailure={this.handleCommentSendFailure}
+          article_id={(this.props.match.params as any).article_id}
+        />
       </div>
     );
   }

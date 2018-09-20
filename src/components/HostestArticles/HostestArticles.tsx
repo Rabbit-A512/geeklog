@@ -1,11 +1,12 @@
 import * as React from 'react';
-import axios from '../../utils/server';
+import server from '../../utils/server';
 import { List } from "antd";
 import { Article } from "../../models/article";
 
 import ArticleCard from '../ArticleCard/ArticleCard';
 import { Link } from "react-router-dom";
 import { AxiosResponse } from "axios";
+import axios from 'axios';
 
 class HostestArticles extends React.Component {
 
@@ -14,7 +15,7 @@ class HostestArticles extends React.Component {
   };
 
   public componentDidMount() {
-    axios.get('/articles/hot/5')
+    server.get('/articles/hot/5')
       .then((res: AxiosResponse<{ data: Article[] }>) => {
         const hotArticles = res.data.data;
         this.setState({
@@ -24,6 +25,10 @@ class HostestArticles extends React.Component {
       .catch(error => {
         console.log(error);
       });
+  }
+
+  public componentWillUnmount() {
+    axios.CancelToken.source().cancel();
   }
 
   public render() {

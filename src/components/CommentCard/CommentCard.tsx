@@ -4,6 +4,9 @@ import { Button, Card, Form, Modal, message } from "antd";
 import Avatar from "antd/lib/avatar";
 import TextArea from "antd/lib/input/TextArea";
 import { WrappedFormUtils } from "antd/lib/form/Form";
+import { getCurrentUser } from "../../utils/auth";
+import server, { getAuthServer } from '../../utils/server';
+import { AxiosError, AxiosResponse } from "axios";
 
 const Meta = Card.Meta;
 
@@ -30,6 +33,30 @@ class CommentCard extends React.Component<IProps> {
     console.log(this.props.form.validateFields((errors, values) => {
       if (!errors) {
         console.log(values);
+
+        const currentUser = getCurrentUser();
+
+        const reqBody = {
+          content: values.comment,
+          user_id: currentUser.user_id,
+          article_id: this.props.comment.article_id,
+          parent_id: this.props.comment.comment_id,
+          // root_id: this.props.comment.root_id ? this.props.comment.root_id : this.props.comment.comment_id
+        };
+
+        const authServer = getAuthServer();
+
+        authServer.post('/comments', reqBody)
+          .then((res: AxiosResponse) => {
+            console.log(res);
+            this.setState({
+              modalVisible: false
+            });
+          })
+          .catch((error: AxiosError) => {
+            console.log(error);
+          });
+
         this.setState({
           modalVisible: false
         });
@@ -45,6 +72,20 @@ class CommentCard extends React.Component<IProps> {
       modalVisible: false
     });
   };
+
+  public loadSubComments = () => {
+    server.get(`/comments/${this.props.comment.comment_id}/sub_comments?page=1&size=10`)
+      .then((res: AxiosResponse) => {
+        console.log(res);
+      })
+      .catch((error: AxiosError) => {
+        console.log(error);
+      });
+  };
+
+  public componentDidMount() {
+    this.loadSubComments();
+  }
 
   public render() {
 
