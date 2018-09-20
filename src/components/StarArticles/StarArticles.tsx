@@ -1,27 +1,33 @@
 import * as React from 'react';
-import server from '../../utils/server';
 import { List } from "antd";
 import { Article } from "../../models/article";
-
-import ArticleCard from '../ArticleCard/ArticleCard';
+import server from '../../utils/server';
+import { AxiosError, AxiosResponse } from "axios";
 import { Link } from "react-router-dom";
-import { AxiosResponse } from "axios";
 
-class HostestArticles extends React.Component {
+import ArticleCard from '../../components/ArticleCard/ArticleCard';
+
+interface IProps {
+  user_id: number;
+}
+
+class StarArticles extends React.Component<IProps> {
 
   public state = {
-    articles: Array<Article>()
+    articles: Array<Article>(),
+    page: 1,
+    size: 10
   };
 
   public componentDidMount() {
-    server.get('/articles/hot/5')
-      .then((res: AxiosResponse<{ data: Article[] }>) => {
-        const hotArticles = res.data.data;
+    server.get(`/users/${this.props.user_id}/star/articles?page=1&size=${this.state.size}`)
+      .then((res: AxiosResponse) => {
+        const articles = res.data.data ? res.data.data.entities : [];
         this.setState({
-          articles: hotArticles
+          articles
         });
       })
-      .catch(error => {
+      .catch((error: AxiosError) => {
         console.log(error);
       });
   }
@@ -34,8 +40,6 @@ class HostestArticles extends React.Component {
         }}
       >
         <List
-          bordered={true}
-          header={<h2>最热文章</h2>}
           dataSource={this.state.articles}
           renderItem={(item: Article) => (
             <List.Item>
@@ -52,4 +56,4 @@ class HostestArticles extends React.Component {
   }
 }
 
-export default HostestArticles;
+export default StarArticles;

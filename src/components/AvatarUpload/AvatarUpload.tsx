@@ -32,6 +32,9 @@ class AvatarUpload extends React.Component {
       //   loading: false
       // }))
       console.log(info.file.response);
+      this.setState({
+        imageUrl: info.file.response.data.avatar
+      });
     }
   };
 
@@ -57,7 +60,7 @@ class AvatarUpload extends React.Component {
         <Upload
           name={'avatar'}
           headers={{
-            Authorization: localStorage.getItem('token') || ''
+            'Authorization': 'Bearer ' + localStorage.getItem('token') || '',
           }}
           listType={'picture-card'}
           showUploadList={false}

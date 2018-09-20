@@ -1,24 +1,34 @@
 import * as React from 'react';
 import { Avatar, Card, Divider, Tabs } from "antd";
-import HostestArticles from "../../components/HostestArticles/HostestArticles";
 import { RouteComponentProps } from "react-router";
 import { User } from "../../models/user";
 import { getAuthServer } from '../../utils/server';
 import { AxiosError, AxiosResponse } from "axios";
 import * as _ from 'lodash';
+import { Article } from "../../models/article";
+import CollectArticles from "../../components/CollectArticles/CollectArticles";
+import StarArticles from "../../components/StarArticles/StarArticles";
 
 const TabPane = Tabs.TabPane;
 
+interface IState {
+  user: User | null;
+  collect_articles: Article[];
+  star_articles: Article[];
+}
+
 class UserHome extends React.Component<RouteComponentProps> {
 
-  public state: { user: User | null } = {
-    user: null
+  public state: IState = {
+    user: null,
+    collect_articles: [],
+    star_articles: []
   };
 
   public componentDidMount() {
 
-    const axios = getAuthServer();
-    axios.get(`/users/${(this.props.match.params as any).user_id}`)
+    const authServer = getAuthServer();
+    authServer.get(`/users/${(this.props.match.params as any).user_id}`)
       .then((res: AxiosResponse) => {
 
         const userRes = _.pick(res.data.data, ['username', 'nickname', 'user_id', 'avatar', 'is_admin', 'bio']);
@@ -34,6 +44,13 @@ class UserHome extends React.Component<RouteComponentProps> {
   }
 
   public render() {
+
+    let avatar = <Avatar icon={'user'} size={'large'}/>;
+
+    if (this.state.user && this.state.user.avatar) {
+      avatar = <Avatar src={this.state.user.avatar}/>
+    }
+
     return (
       <div
         style={{
@@ -46,18 +63,22 @@ class UserHome extends React.Component<RouteComponentProps> {
           bordered={true}
         >
           <Card.Meta
-            avatar={<Avatar icon={'user'} size={'large'}/>}
+            avatar={avatar}
             title={this.state.user ? this.state.user.nickname : 'none'}
             description={this.state.user ? this.state.user.bio : 'none'}
           />
         </Card>
         <Divider/>
         <Tabs defaultActiveKey={'1'}>
-          <TabPane tab={'收藏的文章'} key={'1'}>
-            <HostestArticles/>
+          <TabPane tab={'点赞的文章'} key={'1'}>
+            <StarArticles
+              user_id={(this.props.match.params as any).user_id}
+            />
           </TabPane>
-          <TabPane tab={'评论的文章'} key={'2'}>
-            <HostestArticles/>
+          <TabPane tab={'收藏的文章'} key={'2'}>
+            <CollectArticles
+              user_id={(this.props.match.params as any).user_id}
+            />
           </TabPane>
         </Tabs>
       </div>
