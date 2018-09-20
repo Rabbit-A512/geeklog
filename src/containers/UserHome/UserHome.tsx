@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Avatar, Card, Divider, Tabs } from "antd";
+import { Card, Divider, Tabs } from "antd";
 import { RouteComponentProps } from "react-router";
 import { User } from "../../models/user";
 import { getAuthServer } from '../../utils/server';
@@ -8,6 +8,7 @@ import * as _ from 'lodash';
 import { Article } from "../../models/article";
 import CollectArticles from "../../components/CollectArticles/CollectArticles";
 import StarArticles from "../../components/StarArticles/StarArticles";
+import SaveAvatar from '../../components/SafeAvatar/SafeAvatar';
 
 const TabPane = Tabs.TabPane;
 
@@ -45,12 +46,6 @@ class UserHome extends React.Component<RouteComponentProps> {
 
   public render() {
 
-    let avatar = <Avatar icon={'user'} size={'large'}/>;
-
-    if (this.state.user && this.state.user.avatar) {
-      avatar = <Avatar src={this.state.user.avatar}/>
-    }
-
     return (
       <div
         style={{
@@ -63,7 +58,11 @@ class UserHome extends React.Component<RouteComponentProps> {
           bordered={true}
         >
           <Card.Meta
-            avatar={avatar}
+            avatar={(
+              <SaveAvatar
+                avatarPath={this.state.user ? this.state.user.avatar : undefined}
+              />
+            )}
             title={this.state.user ? this.state.user.nickname : 'none'}
             description={this.state.user ? this.state.user.bio : 'none'}
           />

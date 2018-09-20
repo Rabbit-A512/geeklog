@@ -5,6 +5,7 @@ import Avatar from "antd/lib/avatar";
 import { AxiosResponse } from 'axios';
 import server from '../../utils/server';
 import axios from 'axios';
+import { Link } from "react-router-dom";
 
 const Item = List.Item;
 
@@ -43,8 +44,16 @@ class LatestComments extends React.Component {
         renderItem={(item: Comment) => (
           <Item>
             <List.Item.Meta
-              avatar={<Avatar icon={'user'}/>}
-              title={`user_id:${item.user_id}`}
+              avatar={(
+                <Link to={`/user-home/${item.user_id}`}>
+                  <Avatar icon={'user'}/>
+                </Link>
+              )}
+              title={(
+                <Link to={`/user-home/${item.user_id}`}>
+                  <span>user #{item.user_id}</span>
+                </Link>
+              )}
               description={item.content}
             />
           </Item>

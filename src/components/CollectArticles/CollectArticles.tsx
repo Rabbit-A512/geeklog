@@ -19,8 +19,8 @@ class CollectArticles extends React.Component<IProps> {
     size: 10
   };
 
-  public componentDidMount() {
-    server.get(`/users/${this.props.user_id}/collect/articles?page=1&size=${this.state.size}`)
+  public loadArticles = (page: number) => {
+    server.get(`/users/${this.props.user_id}/collect/articles?page=${page}&size=${this.state.size}`)
       .then((res: AxiosResponse) => {
         const articles = res.data.data ? res.data.data.entities : [];
         this.setState({
@@ -30,6 +30,10 @@ class CollectArticles extends React.Component<IProps> {
       .catch((error: AxiosError) => {
         console.log(error);
       });
+  };
+
+  public componentDidMount() {
+    this.loadArticles(1);
   }
 
   public render() {

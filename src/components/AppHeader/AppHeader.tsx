@@ -6,6 +6,7 @@ import { CSSProperties } from "react";
 import { getCurrentUser, logout } from "../../utils/auth";
 import MenuItem from "antd/lib/menu/MenuItem";
 import { withRouter } from "react-router-dom";
+import SafeAvatar from '../../components/SafeAvatar/SafeAvatar';
 
 const Header = Layout.Header;
 
@@ -49,10 +50,18 @@ class AppHeader extends React.Component<RouteComponentProps> {
 
       dropdown = (
         <Dropdown overlay={menu}>
-        <span>
-          {currentUser.nickname}&nbsp;
-          <Icon type={'down'}/>
-        </span>
+          <span
+            style={{
+              fontSize: 'medium'
+            }}
+          >
+            <SafeAvatar
+              avatarPath={currentUser.avatar}
+            />
+            &nbsp;
+            {currentUser.nickname}&nbsp;
+            <Icon type={'down'}/>
+          </span>
         </Dropdown>
       );
     } else {
