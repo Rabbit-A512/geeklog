@@ -8,6 +8,7 @@ const Option = Select.Option;
 
 interface IProps {
   showAllCategories: boolean;
+  defaultCategory_id: number;
   categoryChangeHandler(value: number): void;
 }
 
@@ -30,7 +31,7 @@ class CategorySelector extends React.Component<IProps> {
   public render() {
     return (
       <Select
-        defaultValue={1}
+        defaultValue={this.props.defaultCategory_id}
         onChange={this.props.categoryChangeHandler}
         style={{
           width: '150px'

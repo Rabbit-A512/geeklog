@@ -12,14 +12,14 @@ class AllArticles extends React.Component {
     page: 1,
     size: 5,
     total: 0,
-    category_id: null,
+    category_id: -1,
     articles: Array<Article>()
   };
 
-  public loadAllArticles(page: number): void {
+  public loadAllArticles(page: number, categoryId: number): void {
     let url = `/articles?page=${page}&size=${this.state.size}`;
-    if (this.state.category_id) {
-      url += `&category_id=${this.state.category_id}`;
+    if (categoryId !== -1) {
+      url += `&category_id=${categoryId}`;
     }
     server.get(url)
       .then((res: AxiosResponse) => {
@@ -36,29 +36,24 @@ class AllArticles extends React.Component {
   }
 
   public handleCategoryChange = (id: number) => {
-    //
-    // const categoryId = id === -1 ? null : id;
-    //
-    // this.setState({
-    //   category_id: categoryId
-    // });
-    //
-    // console.log(this.state);
-    //
-    // this.loadAllArticles(1);
+
+    this.setState({
+      category_id: id
+    });
+
+    this.loadAllArticles(1, id);
   };
 
   public handlePageChange = (page: number) => {
-    this.loadAllArticles(page);
+    this.loadAllArticles(page, this.state.category_id);
   };
 
   public componentDidMount() {
-    this.loadAllArticles(1);
+    // category_id = -1 stands for all categories
+    this.loadAllArticles(1, -1);
   }
 
   public render() {
-
-    console.log(this.state);
 
     return (
       <div
@@ -69,6 +64,7 @@ class AllArticles extends React.Component {
         }}
       >
         <CategorySelector
+          defaultCategory_id={-1}
           showAllCategories={true}
           categoryChangeHandler={this.handleCategoryChange}
         />
@@ -84,7 +80,7 @@ class AllArticles extends React.Component {
               actions={[
                 <IconText type={'star-o'} text={`${item.collect_count}`} key={0}/>,
                 <IconText type={'like-o'} text={`${item.star_count}`} key={1}/>,
-                <IconText type={'message-o'} text={`${item.comment_count}`} key={1}/>,
+                <IconText type={'message-o'} text={`${item.comment_count}`} key={2}/>,
               ]}
             >
               <List.Item.Meta

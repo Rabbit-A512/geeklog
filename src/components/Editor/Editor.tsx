@@ -256,6 +256,7 @@ console.log('Hello, world!');
                 />
                 <Divider>文章分类</Divider>
                 <CategorySelector
+                  defaultCategory_id={1}
                   showAllCategories={false}
                   categoryChangeHandler={this.categoryChangeHandler}
                 />
