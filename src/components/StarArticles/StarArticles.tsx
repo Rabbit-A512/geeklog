@@ -3,7 +3,6 @@ import { List } from "antd";
 import { Article } from "../../models/article";
 import server from '../../utils/server';
 import { AxiosError, AxiosResponse } from "axios";
-import { Link } from "react-router-dom";
 
 import ArticleCard from '../../components/ArticleCard/ArticleCard';
 
@@ -45,29 +44,22 @@ class StarArticles extends React.Component<IProps> {
 
   public render() {
     return (
-      <div
-        style={{
-          width: '100%'
+      <List
+        className={'w-100'}
+        pagination={{
+          pageSize: this.state.size,
+          onChange: this.handlePageChange,
+          total: this.state.total
         }}
-      >
-        <List
-          pagination={{
-            pageSize: this.state.size,
-            onChange: this.handlePageChange,
-            total: this.state.total
-          }}
-          dataSource={this.state.articles}
-          renderItem={(item: Article) => (
-            <List.Item>
-              <Link to={`/read-article/${item.article_id}`}>
-                <ArticleCard
-                  article={item}
-                />
-              </Link>
-            </List.Item>
-          )}
-        />
-      </div>
+        dataSource={this.state.articles}
+        renderItem={(item: Article) => (
+          <List.Item>
+            <ArticleCard
+              article={item}
+            />
+          </List.Item>
+        )}
+      />
     );
   }
 }

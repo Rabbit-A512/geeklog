@@ -1,10 +1,11 @@
 import * as React from 'react';
 import server from '../../utils/server';
-import { List } from "antd";
+import { Button, List } from "antd";
 import { Article } from "../../models/article";
 
 import ArticleCard from '../ArticleCard/ArticleCard';
 import { AxiosResponse } from "axios";
+import { Link } from "react-router-dom";
 
 class HostestArticles extends React.Component {
 
@@ -27,24 +28,30 @@ class HostestArticles extends React.Component {
 
   public render() {
     return (
-      <div
-        style={{
-          width: '100%'
-        }}
-      >
-        <List
-          bordered={true}
-          header={<h2>最热文章</h2>}
-          dataSource={this.state.articles}
-          renderItem={(item: Article) => (
-            <List.Item>
-              <ArticleCard
-                article={item}
-              />
-            </List.Item>
-          )}
-        />
-      </div>
+      <List
+        className={'w-100'}
+        bordered={true}
+        header={(
+          <h2>
+            最热文章&nbsp;
+            <Link to={'/all-articles'}>
+              <Button
+                htmlType={'button'}
+              >
+                所有文章
+              </Button>
+            </Link>
+          </h2>
+        )}
+        dataSource={this.state.articles}
+        renderItem={(item: Article) => (
+          <List.Item>
+            <ArticleCard
+              article={item}
+            />
+          </List.Item>
+        )}
+      />
     );
   }
 }

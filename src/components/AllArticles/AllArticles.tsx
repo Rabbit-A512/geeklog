@@ -82,8 +82,9 @@ class AllArticles extends React.Component {
           renderItem={(item: Article) => (
             <List.Item
               actions={[
-                <IconText type={'star-o'} text={'100'} key={0}/>,
-                <IconText type={'like-o'} text={'120'} key={1}/>,
+                <IconText type={'star-o'} text={`${item.collect_count}`} key={0}/>,
+                <IconText type={'like-o'} text={`${item.star_count}`} key={1}/>,
+                <IconText type={'message-o'} text={`${item.comment_count}`} key={1}/>,
               ]}
             >
               <List.Item.Meta

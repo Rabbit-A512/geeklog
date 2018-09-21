@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Article } from "../../models/article";
-import { Button, Card } from "antd";
+import { Button, Card, Tag } from "antd";
 import * as ReactMarkdown from 'react-markdown';
 import CodeBlock from "../CodeBlock/CodeBlock";
 import { getAuthServer } from "../../utils/server";
 import { RouteComponentProps, withRouter } from "react-router";
 import { getCurrentUser } from "../../utils/auth";
 import { AxiosError, AxiosResponse } from "axios";
+import tagColors from "../../utils/tagColors";
 
 const Meta = Card.Meta;
 const ButtonGroup = Button.Group;
@@ -162,11 +163,25 @@ class FullArticle extends React.Component<IProps> {
     return (
       <Card
         title={(
-          <h2
-            style={{
-              textAlign: 'center'
-            }}
-          >{this.props.article.title}</h2>
+          <div>
+            <h2
+              style={{
+                textAlign: 'center'
+              }}
+            >{this.props.article.title}</h2>
+            <span>
+              {this.props.article.tags.split(',').map((value: string, index: number) => {
+                return (
+                  <Tag
+                    color={tagColors[index % 11]}
+                    key={value}
+                  >
+                    {value}
+                  </Tag>
+                );
+              })}
+            </span>
+          </div>
         )}
       >
         <ReactMarkdown

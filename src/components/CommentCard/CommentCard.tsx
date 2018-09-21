@@ -146,7 +146,8 @@ class CommentCard extends React.Component<IProps> {
 
     return (
       <Card
-        bordered={false}
+        bordered={true}
+        className={'w-100'}
       >
         <Meta
           avatar={<Avatar icon={'user'}/>}
@@ -157,7 +158,12 @@ class CommentCard extends React.Component<IProps> {
           onClick={this.showModal}
           icon={'message'}
           htmlType={'button'}
-        />
+          style={{
+            marginTop: 10
+          }}
+        >
+          回复ta
+        </Button>
         <Modal
           title={`回复给${this.props.comment.user_id}`}
           visible={this.state.modalVisible}

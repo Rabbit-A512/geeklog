@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Comment } from "../../models/comment";
-import { List } from "antd";
-import Avatar from "antd/lib/avatar";
+import { Avatar, List } from "antd";
 import { AxiosResponse } from 'axios';
 import server from '../../utils/server';
 import { Link } from "react-router-dom";
@@ -32,6 +31,7 @@ class LatestComments extends React.Component {
   public render() {
     return (
       <List
+        className={'w-100'}
         header={<h2>最新评论</h2>}
         bordered={true}
         itemLayout={'horizontal'}

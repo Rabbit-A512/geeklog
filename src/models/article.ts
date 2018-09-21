@@ -11,6 +11,7 @@ export interface Article {
   collect_count?: number;
   star_count?: number;
   comment_count?: number;
+  category_name?: string;
 }
 
 export interface EditingArticle {
