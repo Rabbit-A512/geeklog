@@ -85,12 +85,14 @@ class CommentCard extends React.Component<IProps> {
   };
 
   public loadSubComments = (page: number) => {
-    server.get(`/comments/${this.props.comment.comment_id}/sub_comments?page=${page}&size=10`)
+
+    const url = `/comments/${this.props.comment.comment_id}/sub_comments?page=${page}&size=${this.state.size}`;
+
+    server.get(url)
       .then((res: AxiosResponse) => {
         const subComments = res.data.data ? res.data.data.entities : [];
         console.log(subComments);
-        const size = this.state.size;
-        const total = res.data.data ? Math.ceil(res.data.data.total / size) : 0;
+        const total = res.data.data ? res.data.data.total : 0;
         this.setState({
           sub_comments: subComments,
           total

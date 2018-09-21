@@ -11,11 +11,7 @@ import { UnControlled as CodeMirror } from "react-codemirror2";
 import CodeBlock from "../CodeBlock/CodeBlock";
 import TextArea from "antd/lib/input/TextArea";
 
-import './Editor.css';
 import CategorySelector from "../CategorySelector/CategorySelector";
-import { Category } from "../../models/category";
-import axios from '../../utils/server';
-import { AxiosResponse } from "axios";
 import { RouteComponentProps } from "react-router";
 import { getCurrentUser } from "../../utils/auth";
 
@@ -29,11 +25,9 @@ interface IProps extends RouteComponentProps {
 
 class Editor extends React.Component<IProps> {
 
-
   public state = {
     showDrawer: false,
-    category_id: null,
-    categories: Array<Category>(),
+    category_id: 1,
     tagEditor: {
       tags: Array<string>(),
       inputVisible: false,
@@ -153,17 +147,6 @@ console.log('Hello, world!');
       lineNumbers: value
     });
   };
-
-  public componentDidMount() {
-    axios.get('/categories')
-      .then((res: AxiosResponse<{ data: Category[] }>) => {
-        const categories = res.data.data;
-        console.log(categories);
-        this.setState({
-          categories
-        });
-      })
-  }
 
   public render() {
 
@@ -354,7 +337,7 @@ console.log('Hello, world!');
                 </div>
                 <Divider>文章分类</Divider>
                 <CategorySelector
-                  categories={this.state.categories}
+                  showAllCategories={false}
                   categoryChangeHandler={this.categoryChangeHandler}
                 />
               </Drawer>

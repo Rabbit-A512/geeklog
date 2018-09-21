@@ -6,3 +6,7 @@
 @import "~codemirror/theme/mdn-like.css";
 @import "~codemirror/theme/paraiso-light.css";
 @import "~codemirror/theme/base16-light.css";
+
+.CodeMirror {
+    height: auto;
+}

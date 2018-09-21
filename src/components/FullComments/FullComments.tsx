@@ -40,8 +40,7 @@ class FullComments extends React.Component<IProps> {
     server.get(`/articles/${this.props.article_id}/comments?page=${page}&size=${this.state.size}`)
       .then((res: AxiosResponse) => {
         const comments = res.data.data ? res.data.data.entities : [];
-        const size = this.state.size;
-        const total = res.data.data ? Math.ceil(res.data.data.total / size) : 0;
+        const total = res.data.data ? res.data.data.total : 0;
         console.log(comments);
         this.setState({
           comments,

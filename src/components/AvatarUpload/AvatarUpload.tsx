@@ -5,8 +5,9 @@ import { getCurrentUser } from "../../utils/auth";
 
 function beforeUpload(file: UploadFile) {
   const isJPG = file.type === 'image/jpeg';
-  if (!isJPG) {
-    message.error('只能上传JPG格式的图片！');
+  const isPNG = file.type === 'image/png';
+  if (!isJPG && !isPNG) {
+    message.error('只能上传jpg, jpeg, png格式的图片！');
   }
 
   return isJPG
