@@ -16,7 +16,7 @@ class TagEditor extends React.Component<IProps> {
   public input: Input;
 
   public handleClose = (removedTag: string) => {
-    const tags = this.state.tags.filter(tag => tag !== removedTag);
+    const tags = this.props.tags.filter(tag => tag !== removedTag);
     this.setState({
       tags
     });
@@ -36,9 +36,8 @@ class TagEditor extends React.Component<IProps> {
   };
 
   public handleInputConfirm = () => {
-    const state = this.state;
-    const inputValue = state.inputValue;
-    let tags = state.tags;
+    const inputValue = this.state.inputValue;
+    let tags = this.props.tags;
     if (inputValue && tags.indexOf(inputValue) === -1) {
       tags = [...tags, inputValue];
     }
@@ -56,6 +55,8 @@ class TagEditor extends React.Component<IProps> {
     this.setState({
       tags: this.props.tags
     });
+    console.log('tags from tag editor', this.props);
+    console.log('state from tag editor', this.state);
   }
 
   public render() {
