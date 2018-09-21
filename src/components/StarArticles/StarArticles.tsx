@@ -16,20 +16,31 @@ class StarArticles extends React.Component<IProps> {
   public state = {
     articles: Array<Article>(),
     page: 1,
-    size: 10
+    size: 10,
+    total: 0
   };
 
-  public componentDidMount() {
-    server.get(`/users/${this.props.user_id}/star/articles?page=1&size=${this.state.size}`)
+  public loadArticles = (page: number) => {
+    server.get(`/users/${this.props.user_id}/star/articles?page=${page}&size=${this.state.size}`)
       .then((res: AxiosResponse) => {
         const articles = res.data.data ? res.data.data.entities : [];
+        const total = res.data.data ? res.data.data.total : 0;
         this.setState({
-          articles
+          articles,
+          total
         });
       })
       .catch((error: AxiosError) => {
         console.log(error);
       });
+  };
+
+  public handlePageChange = (page: number) => {
+    this.loadArticles(page);
+  };
+
+  public componentDidMount() {
+    this.loadArticles(1);
   }
 
   public render() {
@@ -40,6 +51,11 @@ class StarArticles extends React.Component<IProps> {
         }}
       >
         <List
+          pagination={{
+            pageSize: this.state.size,
+            onChange: this.handlePageChange,
+            total: this.state.total
+          }}
           dataSource={this.state.articles}
           renderItem={(item: Article) => (
             <List.Item>

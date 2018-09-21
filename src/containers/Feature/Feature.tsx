@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { Menu } from "antd";
-import { Icon, Layout } from "antd";
+import { Icon, Layout, Menu } from "antd";
 import { Link, Route, RouteComponentProps } from "react-router-dom";
-import Editor from "../../components/Editor/Editor";
 import ChangePasswordForm from "../../components/ChangePasswordForm/ChangePasswordForm";
 import AvatarUpload from "../../components/AvatarUpload/AvatarUpload";
 import ModifyProfileForm from "../../components/ModiifyProfileForm/ModifyProfileForm";
 import { CollapseType } from "antd/lib/layout/Sider";
 import { StaticContext } from "react-router";
 import UserHome from "../UserHome/UserHome";
+import NewArticle from "../NewArticle/NewArticle";
+import EditArticle from "../EditArticle/EditArticle";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -44,7 +44,7 @@ class Feature extends React.Component<RouteComponentProps<any, StaticContext, an
               title={<span><Icon type="user" /><span>用户</span></span>}
             >
               <Menu.Item key="5">
-                <Link to={'/feature/new-post'}>
+                <Link to={'/feature/new-article'}>
                   <Icon type={'edit'}/>
                   写文章
                 </Link>
@@ -78,7 +78,8 @@ class Feature extends React.Component<RouteComponentProps<any, StaticContext, an
         <Layout>
           <Content style={{ margin: '0 16px', minHeight: '80vh' }}>
             <Route path={'/feature/user-home/:user_id'} component={UserHome} />
-            <Route path={'/feature/new-post'} component={Editor}/>
+            <Route path={'/feature/edit-article/:article_id'} component={EditArticle} />
+            <Route path={'/feature/new-article'} component={NewArticle}/>
             <Route path={'/feature/change-password'} component={ChangePasswordForm}/>
             <Route path={'/feature/avatar-upload'} component={AvatarUpload}/>
             <Route path={'/feature/modify-profile'} component={ModifyProfileForm}/>

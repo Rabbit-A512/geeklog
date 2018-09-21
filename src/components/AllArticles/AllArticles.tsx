@@ -24,8 +24,6 @@ class AllArticles extends React.Component {
     server.get(url)
       .then((res: AxiosResponse) => {
         const articles = res.data.data ? res.data.data.entities : [];
-        // const size = this.state.size;
-        // const total = res.data.data ? Math.ceil(res.data.data.total / size) : 0;
         const total = res.data.data ? res.data.data.total : 0;
         this.setState({
           articles,

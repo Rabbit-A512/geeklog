@@ -1,12 +1,13 @@
 import * as React from 'react';
+import { FormEvent } from 'react';
 import Input from "antd/lib/input/Input";
 import Form, { WrappedFormUtils } from "antd/lib/form/Form";
 import FormItem from "antd/lib/form/FormItem";
 import Button from "antd/lib/button/button";
-import { FormEvent } from "react";
-import { Tabs, Select, Card, Switch, Drawer, Tag, Tooltip, Icon, Divider } from "antd";
+import { Card, Divider, Drawer, Icon, Select, Switch, Tabs } from "antd";
 import * as ReactMarkdown from 'react-markdown';
 import { UnControlled as CodeMirror } from "react-codemirror2";
+import { withRouter } from "react-router";
 
 import CodeBlock from "../CodeBlock/CodeBlock";
 import TextArea from "antd/lib/input/TextArea";
@@ -14,28 +15,34 @@ import TextArea from "antd/lib/input/TextArea";
 import CategorySelector from "../CategorySelector/CategorySelector";
 import { RouteComponentProps } from "react-router";
 import { getCurrentUser } from "../../utils/auth";
+import TagEditor from "./TagEditor/TagEditor";
+import { EditingArticle } from "../../models/article";
 
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
 const OptGroup = Select.OptGroup;
 
 interface IProps extends RouteComponentProps {
-  form: WrappedFormUtils
+  form: WrappedFormUtils;
+  category_id?: number;
+  tags?: string[];
+  title?: string;
+  source?: string;
+  onArticleChange: (article: EditingArticle) => void;
 }
 
 class Editor extends React.Component<IProps> {
 
   public state = {
+    // internal editor config
     showDrawer: false,
-    category_id: 1,
-    tagEditor: {
-      tags: Array<string>(),
-      inputVisible: false,
-      inputValue: '',
-    },
-    theme: 'monokai',
-    title: '你好世界',
     lineNumbers: true,
+    theme: 'monokai',
+
+    // external article input
+    category_id: 1,
+    tags: Array<string>(),
+    title: '你好世界',
     source: `# Hello Markdown
 
 \`\`\`javascript
@@ -46,61 +53,11 @@ console.log('Hello, world!');
 `
   };
 
-  private input: Input;
-
   public categoryChangeHandler = (value: number) => {
     this.setState({
       category_id: value
     });
   };
-
-  public tagCloseHandler = (removedTag: string) => {
-    const tags = this.state.tagEditor.tags.filter(tag => tag !== removedTag);
-    console.log(tags);
-
-    const tagEditor = {...this.state.tagEditor};
-    tagEditor.tags = tags;
-    this.setState({
-      tagEditor
-    });
-  };
-
-  public showInput = () => {
-    const tagEditor = {...this.state.tagEditor};
-    tagEditor.inputVisible = true;
-    this.setState({tagEditor}, () => this.input.focus());
-  };
-
-  public inputChangeHandler = (e: any) => {
-    const tagEditor = {...this.state.tagEditor};
-    console.log(e);
-    console.log(typeof e);
-    tagEditor.inputValue = e.target.value;
-    this.setState({
-      tagEditor
-    })
-  };
-
-  public inputConfirmHandler = () => {
-    let tagEditor = {...this.state.tagEditor};
-    const inputValue = tagEditor.inputValue;
-    let tags = tagEditor.tags;
-    if (inputValue && tags.indexOf(inputValue) === -1) {
-      tags = [...tags, inputValue]
-    }
-
-    console.log(tags);
-    tagEditor = {
-      tags,
-      inputValue: '',
-      inputVisible: false
-    };
-    this.setState({
-      tagEditor
-    })
-  };
-
-  public saveInputRef = (input: Input) => this.input = input;
 
   public showDrawer = () => {
     this.setState({
@@ -125,12 +82,12 @@ console.log('Hello, world!');
         } else {
           const temp = {
             ...values,
-            tags: this.state.tagEditor.tags.join(','),
+            tags: this.state.tags.join(','),
             // hard code category_id to 1 as the default value
             category_id: this.state.category_id || 1,
             user_id: currentUser.user_id
           };
-          console.log('[New Article]', temp);
+          this.props.onArticleChange(temp);
         }
       }
     });
@@ -148,11 +105,39 @@ console.log('Hello, world!');
     });
   };
 
+  public handleTagsChange = (newTags: string[]) => {
+    this.setState({
+      tags: newTags
+    });
+  };
+
+  public componentDidMount() {
+    const { category_id, title, tags, source } = this.props;
+    if (category_id) {
+      this.setState({
+        category_id
+      });
+    }
+    if (title) {
+      this.setState({
+        title
+      });
+    }
+    if (tags) {
+      this.setState({
+        tags
+      });
+    }
+    if (source) {
+      this.setState({
+        source
+      });
+    }
+  }
+
   public render() {
 
     const getFieldDecorator = this.props.form.getFieldDecorator;
-
-    const { tags, inputVisible, inputValue } = this.state.tagEditor;
 
     return (
       <div>
@@ -202,42 +187,10 @@ console.log('Hello, world!');
               marginBottom: '10px'
             }}
           >
-            {tags.map((tag, index) => {
-              const isLongTag = tag.length > 20;
-              const tagElem = (
-                <Tag
-                  key={tag}
-                  closable={true}
-                  afterClose={() => this.tagCloseHandler(tag)}
-                >
-                  {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-                </Tag>
-              );
-              return isLongTag ? <Tooltip title={tag} key={tag}>{tagElem}</Tooltip> : tagElem;
-            })}
-            {inputVisible && (
-              <Input
-                ref={this.saveInputRef}
-                type={'text'}
-                size={'small'}
-                style={{width: 78}}
-                value={inputValue}
-                onChange={this.inputChangeHandler}
-                onBlur={this.inputConfirmHandler}
-                onPressEnter={this.inputConfirmHandler}
-              />
-            )}
-            {!inputVisible && (
-              <Tag
-                onClick={this.showInput}
-                style={{
-                  backgroundColor: '#fff',
-                  borderStyle: 'dashed'
-                }}
-              >
-                <Icon type={'plus'}/> 新标签
-              </Tag>
-            )}
+            <TagEditor
+              tags={this.state.tags}
+              onTagsChange={this.handleTagsChange}
+            />
           </div>
           <Tabs
             tabBarExtraContent={(
@@ -297,44 +250,10 @@ console.log('Hello, world!');
                   />
                 </div>
                 <Divider>标签</Divider>
-                <div>
-                  {tags.map((tag, index) => {
-                    const isLongTag = tag.length > 20;
-                    const tagElem = (
-                      <Tag
-                        key={tag}
-                        closable={true}
-                        afterClose={() => this.tagCloseHandler(tag)}
-                      >
-                        {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-                      </Tag>
-                    );
-                    return isLongTag ? <Tooltip title={tag} key={tag}>{tagElem}</Tooltip> : tagElem;
-                  })}
-                  {inputVisible && (
-                    <Input
-                      ref={this.saveInputRef}
-                      type={'text'}
-                      size={'small'}
-                      style={{width: 78}}
-                      value={inputValue}
-                      onChange={this.inputChangeHandler}
-                      onBlur={this.inputConfirmHandler}
-                      onPressEnter={this.inputConfirmHandler}
-                    />
-                  )}
-                  {!inputVisible && (
-                    <Tag
-                      onClick={this.showInput}
-                      style={{
-                        backgroundColor: '#fff',
-                        borderStyle: 'dashed'
-                      }}
-                    >
-                      <Icon type={'plus'}/> 新标签
-                    </Tag>
-                  )}
-                </div>
+                <TagEditor
+                  tags={this.state.tags}
+                  onTagsChange={this.handleTagsChange}
+                />
                 <Divider>文章分类</Divider>
                 <CategorySelector
                   showAllCategories={false}
@@ -380,4 +299,4 @@ console.log('Hello, world!');
 
 const WrappedEditor = Form.create()(Editor);
 
-export default WrappedEditor;
+export default withRouter(WrappedEditor);

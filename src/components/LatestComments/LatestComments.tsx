@@ -4,7 +4,6 @@ import { List } from "antd";
 import Avatar from "antd/lib/avatar";
 import { AxiosResponse } from 'axios';
 import server from '../../utils/server';
-import axios from 'axios';
 import { Link } from "react-router-dom";
 
 const Item = List.Item;
@@ -28,10 +27,6 @@ class LatestComments extends React.Component {
       .catch(error => {
         console.log(error);
       });
-  }
-
-  public componentWillUnmount() {
-    axios.CancelToken.source().cancel();
   }
 
   public render() {

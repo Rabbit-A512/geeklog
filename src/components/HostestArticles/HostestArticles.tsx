@@ -4,7 +4,6 @@ import { List } from "antd";
 import { Article } from "../../models/article";
 
 import ArticleCard from '../ArticleCard/ArticleCard';
-import { Link } from "react-router-dom";
 import { AxiosResponse } from "axios";
 
 class HostestArticles extends React.Component {
@@ -39,11 +38,9 @@ class HostestArticles extends React.Component {
           dataSource={this.state.articles}
           renderItem={(item: Article) => (
             <List.Item>
-              <Link to={`/read-article/${item.article_id}`}>
-                <ArticleCard
-                  article={item}
-                />
-              </Link>
+              <ArticleCard
+                article={item}
+              />
             </List.Item>
           )}
         />

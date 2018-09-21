@@ -3,7 +3,6 @@ import { List } from "antd";
 import { Article } from "../../models/article";
 import server from '../../utils/server';
 import { AxiosError, AxiosResponse } from "axios";
-import { Link } from "react-router-dom";
 
 import ArticleCard from '../../components/ArticleCard/ArticleCard';
 
@@ -11,7 +10,7 @@ interface IProps {
   user_id: number;
 }
 
-class CollectArticles extends React.Component<IProps> {
+class OwnArticles extends React.Component<IProps> {
 
   public state = {
     articles: Array<Article>(),
@@ -21,7 +20,7 @@ class CollectArticles extends React.Component<IProps> {
   };
 
   public loadArticles = (page: number) => {
-    server.get(`/users/${this.props.user_id}/collect/articles?page=${page}&size=${this.state.size}`)
+    server.get(`/users/${this.props.user_id}/write/articles?page=${page}&size=${this.state.size}`)
       .then((res: AxiosResponse) => {
         const articles = res.data.data ? res.data.data.entities : [];
         const total = res.data.data ? res.data.data.total : 0;
@@ -59,11 +58,9 @@ class CollectArticles extends React.Component<IProps> {
           dataSource={this.state.articles}
           renderItem={(item: Article) => (
             <List.Item>
-              <Link to={`/read-article/${item.article_id}`}>
-                <ArticleCard
-                  article={item}
-                />
-              </Link>
+              <ArticleCard
+                article={item}
+              />
             </List.Item>
           )}
         />
@@ -72,4 +69,4 @@ class CollectArticles extends React.Component<IProps> {
   }
 }
 
-export default CollectArticles;
+export default OwnArticles;

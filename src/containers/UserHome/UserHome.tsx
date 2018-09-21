@@ -9,6 +9,7 @@ import { Article } from "../../models/article";
 import CollectArticles from "../../components/CollectArticles/CollectArticles";
 import StarArticles from "../../components/StarArticles/StarArticles";
 import SaveAvatar from '../../components/SafeAvatar/SafeAvatar';
+import OwnArticles from "../../components/OwnArticles/OwnArticle";
 
 const TabPane = Tabs.TabPane;
 
@@ -68,7 +69,12 @@ class UserHome extends React.Component<RouteComponentProps> {
           />
         </Card>
         <Divider/>
-        <Tabs defaultActiveKey={'1'}>
+        <Tabs defaultActiveKey={'0'}>
+          <TabPane tab={'作品'} key={'0'}>
+            <OwnArticles
+              user_id={(this.props.match.params as any).user_id}
+            />
+          </TabPane>
           <TabPane tab={'点赞的文章'} key={'1'}>
             <StarArticles
               user_id={(this.props.match.params as any).user_id}
