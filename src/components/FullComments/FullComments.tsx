@@ -72,6 +72,9 @@ class FullComments extends React.Component<IProps> {
         authServer.post('/comments', reqBody)
           .then((res: AxiosResponse) => {
             console.log(res);
+            this.props.form.setFieldsValue({
+              comment: ''
+            });
             this.loadComments(1);
           })
           .catch((error: AxiosError) => {
@@ -142,6 +145,9 @@ class FullComments extends React.Component<IProps> {
           <Button
             onClick={this.handleCommentSubmit}
             htmlType={'button'}
+            style={{
+              marginTop: '10px'
+            }}
           >
             提交
           </Button>
