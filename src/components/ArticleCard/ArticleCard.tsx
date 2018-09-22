@@ -14,6 +14,7 @@ const Group = Button.Group;
 
 interface IArticleCardProps {
   article: Article;
+  onDeleteConfirm?: any;
 }
 
 const articleCard = (props: IArticleCardProps) => {
@@ -22,6 +23,8 @@ const articleCard = (props: IArticleCardProps) => {
   const currentUser = getCurrentUser();
 
   const canEdit = currentUser && article.user_id === currentUser.user_id;
+
+  const showDeleteBtn = !!props.onDeleteConfirm;
 
   const editBtn = canEdit ? (
     <Link to={`/feature/edit-article/${article.article_id}`}>
@@ -34,11 +37,12 @@ const articleCard = (props: IArticleCardProps) => {
     </Link>
   ) : null;
 
-  const deleteBtn = canEdit ? (
+  const deleteBtn = (canEdit && showDeleteBtn) ? (
     <Popconfirm
       title={'删除文章同时会删除所有相关评论，该操作无法撤销！'}
       okText={'确认删除'}
       cancelText={'取消'}
+      onConfirm={() => props.onDeleteConfirm(props.article.article_id)}
     >
       <Button
         htmlType={'button'}

@@ -1,5 +1,5 @@
 export interface Article {
-  article_id?: number;
+  article_id: number;
   title: string;
   created_at: number;
   modified_at: number;
@@ -7,7 +7,7 @@ export interface Article {
   user_id: number;
   category_id: number;
   tags: string;
-  display?: boolean;
+  display: boolean;
   collect_count?: number;
   star_count?: number;
   comment_count?: number;

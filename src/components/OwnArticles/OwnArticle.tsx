@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { List } from "antd";
 import { Article } from "../../models/article";
-import server from '../../utils/server';
+import server, { getAuthServer } from '../../utils/server';
 import { AxiosError, AxiosResponse } from "axios";
 
 import ArticleCard from '../../components/ArticleCard/ArticleCard';
@@ -38,6 +38,19 @@ class OwnArticles extends React.Component<IProps> {
     this.loadArticles(page);
   };
 
+  public handleDeleteConfirm = (id: number) => {
+    const authServer = getAuthServer();
+    authServer.delete(`/articles/${id}`)
+      .then((res: AxiosResponse) => {
+        if (res.data.code === 200) {
+          this.loadArticles(1);
+        }
+      })
+      .catch((error: AxiosError) => {
+        console.log(error);
+      });
+  };
+
   public componentDidMount() {
     this.loadArticles(1);
   }
@@ -56,6 +69,7 @@ class OwnArticles extends React.Component<IProps> {
           <List.Item>
             <ArticleCard
               article={item}
+              onDeleteConfirm={this.handleDeleteConfirm}
             />
           </List.Item>
         )}

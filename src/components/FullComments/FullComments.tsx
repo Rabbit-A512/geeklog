@@ -24,6 +24,7 @@ interface IState {
   page: number;
   size: number;
   total: number;
+  can_comment: boolean;
 }
 
 class FullComments extends React.Component<IProps> {
@@ -33,7 +34,8 @@ class FullComments extends React.Component<IProps> {
     modalVisible: false,
     page: 1,
     size: 5,
-    total: 0
+    total: 0,
+    can_comment: true
   };
 
   public loadComments = (page: number) => {
@@ -89,17 +91,69 @@ class FullComments extends React.Component<IProps> {
 
   public componentDidMount() {
     this.loadComments(1);
+
+    // set can_comment state field
+    const currentUserId = getCurrentUser().user_id;
+    server.get(`/users/${currentUserId}`)
+      .then((res: AxiosResponse) => {
+        if (res.data.code === 200) {
+          this.setState({
+            can_comment: res.data.data.can_comment
+          });
+        }
+      })
+      .catch((error: AxiosError) => {
+        console.log(error);
+      });
   }
 
   public render() {
 
     const { getFieldDecorator } = this.props.form;
 
+    const submitComment = this.state.can_comment ? (
+      <div>
+        {getFieldDecorator('comment', {
+          rules: [
+            {
+              message: '评论不能为空！',
+              required: true
+            }
+          ]
+        })(
+          <TextArea
+            autosize={{
+              minRows: 2,
+              maxRows: 8
+            }}
+          />
+        )}
+        <Button
+          onClick={this.handleCommentSubmit}
+          htmlType={'button'}
+          style={{
+            marginTop: '10px'
+          }}
+        >
+          提交
+        </Button>
+      </div>
+    ) : (
+      <p
+        style={{
+          fontSize: 'large',
+          color: 'red'
+        }}
+      >
+        您的评论权限已经被管理员冻结，请联系管理员QQ:2654525303申请解冻。
+      </p>
+    );
+
     return (
       <div>
         <Divider />
         <Card
-          title={'所有评论'}
+          title={<h3>所有评论</h3>}
         >
           <List
             itemLayout={'horizontal'}
@@ -127,30 +181,7 @@ class FullComments extends React.Component<IProps> {
           />
 
           <Divider orientation={'left'}>发表评论</Divider>
-          {getFieldDecorator('comment', {
-            rules: [
-              {
-                message: '评论不能为空！',
-                required: true
-              }
-            ]
-          })(
-            <TextArea
-              autosize={{
-                minRows: 2,
-                maxRows: 8
-              }}
-            />
-          )}
-          <Button
-            onClick={this.handleCommentSubmit}
-            htmlType={'button'}
-            style={{
-              marginTop: '10px'
-            }}
-          >
-            提交
-          </Button>
+          {submitComment}
         </Card>
       </div>
     );

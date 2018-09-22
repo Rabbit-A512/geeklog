@@ -25,7 +25,8 @@ class CommentCard extends React.Component<IProps> {
     sub_comments: Array<Comment>(),
     page: 1,
     size: 5,
-    total: 10
+    total: 10,
+    can_comment: true
   };
 
 
@@ -105,6 +106,21 @@ class CommentCard extends React.Component<IProps> {
 
   public componentDidMount() {
     this.loadSubComments(1);
+
+    // set can_comment field state field
+    // set can_comment state field
+    const currentUserId = getCurrentUser().user_id;
+    server.get(`/users/${currentUserId}`)
+      .then((res: AxiosResponse) => {
+        if (res.data.code === 200) {
+          this.setState({
+            can_comment: res.data.data.can_comment
+          });
+        }
+      })
+      .catch((error: AxiosError) => {
+        console.log(error);
+      });
   }
 
   public render() {
@@ -112,6 +128,27 @@ class CommentCard extends React.Component<IProps> {
     const { getFieldDecorator } = this.props.form;
 
     const WrappedComment = Form.create()(CommentCard);
+
+    const commentBtn = this.state.can_comment ? (
+      <Button
+        onClick={this.showModal}
+        icon={'message'}
+        htmlType={'button'}
+        style={{
+          marginTop: 10
+        }}
+      >
+        回复ta
+      </Button>
+    ) : (
+      <p
+        style={{
+          color: 'red'
+        }}
+      >
+        您的评论权限已经被管理员冻结，请联系管理员QQ:2654525303申请解冻。
+      </p>
+    );
 
     const subComments = this.props.show_sub ? (
       <Card
@@ -154,16 +191,7 @@ class CommentCard extends React.Component<IProps> {
           title={`user_id: ${this.props.comment.user_id}`}
           description={this.props.comment.content}
         />
-        <Button
-          onClick={this.showModal}
-          icon={'message'}
-          htmlType={'button'}
-          style={{
-            marginTop: 10
-          }}
-        >
-          回复ta
-        </Button>
+        {commentBtn}
         <Modal
           title={`回复给${this.props.comment.user_id}`}
           visible={this.state.modalVisible}

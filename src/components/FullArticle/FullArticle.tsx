@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Article } from "../../models/article";
-import { Button, Card } from "antd";
+import { Button, Card, Divider } from "antd";
 import * as ReactMarkdown from 'react-markdown';
 import CodeBlock from "../CodeBlock/CodeBlock";
 import server, { getAuthServer } from "../../utils/server";
@@ -201,6 +201,24 @@ class FullArticle extends React.Component<IProps> {
         </Button>
       );
 
+    const articleBody = this.props.article.display ? (
+      <ReactMarkdown
+        source={this.props.article.content}
+        renderers={{
+          code: CodeBlock
+        }}
+      />
+    ) : (
+      <p
+        style={{
+          fontSize: 'large',
+          color: 'red'
+        }}
+      >
+        您的文章涉嫌违规，已被管理员屏蔽。请联系管理员QQ:2654525303并根据要求编辑文章内容。
+      </p>
+    );
+
     return (
       <Card
         title={(
@@ -219,35 +237,32 @@ class FullArticle extends React.Component<IProps> {
           </div>
         )}
       >
-        <ReactMarkdown
-          source={this.props.article.content}
-          renderers={{
-            code: CodeBlock
-          }}
-        />
+        {articleBody}
         <Meta
           description={(
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end'
-              }}
-            >
-              <div>
-                <div>发布于：{format(this.props.article.created_at, 'YYYY年 MMMM Do, HH:mm:ss', {locale: zh_CN})}</div>
-                <div>编辑于：{format(this.props.article.modified_at, 'YYYY年 MMMM Do, HH:mm:ss', {locale: zh_CN})}</div>
-              </div>
-              <ButtonGroup
+            <div>
+              <Divider/>
+              <div
                 style={{
-                  marginLeft: 'auto'
+                  display: 'flex',
+                  justifyContent: 'flex-end'
                 }}
               >
-                {collectBtn}
-                {likeBtn}
-              </ButtonGroup>
+                <div>
+                  <div>发布于：{format(this.props.article.created_at, 'YYYY年 MMMM Do, HH:mm:ss', {locale: zh_CN})}</div>
+                  <div>编辑于：{format(this.props.article.modified_at, 'YYYY年 MMMM Do, HH:mm:ss', {locale: zh_CN})}</div>
+                </div>
+                <ButtonGroup
+                  style={{
+                    marginLeft: 'auto'
+                  }}
+                >
+                  {collectBtn}
+                  {likeBtn}
+                </ButtonGroup>
+              </div>
             </div>
           )}
-
         />
       </Card>
     );
