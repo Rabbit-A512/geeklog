@@ -4,7 +4,6 @@ import * as React from 'react';
 import { FormEvent } from 'react';
 import * as _ from 'lodash';
 
-import './RegisterForm.css';
 import TextArea from "antd/lib/input/TextArea";
 import axios from '../../utils/server';
 import { AxiosError, AxiosResponse } from "axios";
@@ -101,13 +100,13 @@ class RegisterForm extends React.Component<IProps> {
       <Card
         title={'注册新用户'}
         style={{
-          maxWidth: '500px',
+          maxWidth: '900px',
+          width: '50%',
           margin: '50px auto'
         }}
       >
         <Form
           onSubmit={this.handleSubmit}
-          className={'RegisterForm'}
           style={{
             margin: '0 50px'
           }}

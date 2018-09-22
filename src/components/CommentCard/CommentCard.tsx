@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import * as zh_CN from "date-fns/locale/zh_cn/index.js";
 import SafeAvatar from '../SafeAvatar/SafeAvatar';
 import { RouteComponentProps, withRouter } from "react-router";
+import { Link } from "react-router-dom";
 
 const Meta = Card.Meta;
 const Item = List.Item;
@@ -31,10 +32,6 @@ class CommentCard extends React.Component<IProps> {
     size: 5,
     total: 10,
     can_comment: true,
-    from_user_name: '',
-    to_user_name: '',
-    article_name: '',
-    avatar: ''
   };
 
 
@@ -131,29 +128,6 @@ class CommentCard extends React.Component<IProps> {
       .catch((error: AxiosError) => {
         console.log(error);
       });
-
-    const { user_id, article_id } = this.props.comment;
-    server.get(`/users/${user_id}`)
-      .then((res: AxiosResponse) => {
-        if (res.data.code === 200) {
-          this.setState({
-            from_user_name: res.data.data.nickname,
-            avatar: res.data.data.avatar
-          });
-        }
-      });
-
-    server.get(`/articles/${article_id}`)
-      .then((res: AxiosResponse) => {
-        if (res.data.code === 200) {
-          this.setState({
-            article_name: res.data.data.title
-          });
-        }
-      })
-      .catch((error: AxiosError) => {
-        console.log(error);
-      });
   }
 
   public render() {
@@ -219,6 +193,41 @@ class CommentCard extends React.Component<IProps> {
       </Card>
     ) : null;
 
+    const comment = {...this.props.comment};
+
+    const toUser = comment.to_user_nickname ? (
+      <span>
+        <span> 回复 </span>
+        <SafeAvatar
+          avatarPath={comment.to_user_avatar}
+          size={'small'}
+        />
+        <span
+          style={{
+            fontSize: 'large',
+            color: '#40a9ff'
+          }}
+        >
+          {comment.to_user_nickname}
+        </span>
+      </span>
+    ) : null;
+
+    const fromArticle = !this.props.show_reply_btn ? (
+      <div
+        style={{
+          fontSize: 'medium',
+          color: '#52c41a',
+          marginTop: '5px'
+        }}
+      >
+        <span>来自文章：</span>
+        <Link to={`/read-article/${comment.article_id}`}>
+          {comment.article_title}
+        </Link>
+      </div>
+    ) : null;
+
     return (
       <Card
         bordered={true}
@@ -226,42 +235,60 @@ class CommentCard extends React.Component<IProps> {
       >
         <Meta
           avatar={(
-            <SafeAvatar
-              avatarPath={this.state.avatar}
-              size={'default'}
-            />
+            <Link to={`/user-home/${comment.user_id}`}>
+              <SafeAvatar
+                avatarPath={comment.from_user_avatar}
+                size={'default'}
+              />
+            </Link>
           )}
           title={(
             <div>
-              <span
-               style={{
-                 fontSize: 'large',
-                 color: '#40a9ff'
-               }}
-              >{this.state.from_user_name}</span>
-              &nbsp;回复&nbsp;
-              <span
-                style={{
-                  fontSize: 'large',
-                  color: '#52c41a'
-                }}
-              >{this.state.article_name}</span>
+              <div>
+                <Link to={`/user-home/${comment.user_id}`}>
+                  <span
+                    style={{
+                      fontSize: 'large',
+                      color: '#40a9ff'
+                    }}
+                  >
+                    {comment.from_user_nickname}
+                  </span>
+                </Link>
+                {toUser}
+              </div>
+              {fromArticle}
             </div>
           )}
           description={(
             <div>
-              <p>{this.props.comment.content}</p>
+              <p
+                style={{
+                  color: '#333',
+                  fontSize: 'medium'
+                }}
+              >{comment.content.length > 30 ? comment.content.substr(0, 30) + '...' : comment.content}</p>
               <p
                 style={{
                   textAlign: 'right'
                 }}
-              >{format(this.props.comment.created_at, 'YYYY年 MMMM Do, HH:mm:ss', {locale: zh_CN})}</p>
+              >{format(comment.created_at, 'YYYY年 M月Do日, HH:mm:ss', {locale: zh_CN})}</p>
             </div>
           )}
         />
         {commentBtn}
         <Modal
-          title={`回复给${this.props.comment.user_id}`}
+          title={(
+            <span>
+              <span>回复给</span>
+              <SafeAvatar
+                avatarPath={comment.from_user_avatar}
+                size={'small'}
+              />
+              &nbsp;
+              {comment.from_user_nickname}
+            </span>
+          )}
           visible={this.state.modalVisible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}

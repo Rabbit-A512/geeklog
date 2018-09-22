@@ -143,8 +143,8 @@ class ArticleCard extends React.Component<IArticleCardProps> {
                 tags={article.tags}
               />
               <p>{article.content.length > 100 ? article.content.substr(0, 100) + '...' : article.content}</p>
-              <div>发布于：{format(article.created_at, 'YYYY年 MMMM Do, HH:mm:ss', {locale: zh_CN})}</div>
-              <div>编辑于：{format(article.modified_at, 'YYYY年 MMMM Do, HH:mm:ss', {locale: zh_CN})}</div>
+              <div>发布于：{format(article.created_at, 'YYYY年 M月Do日, HH:mm:ss', {locale: zh_CN})}</div>
+              <div>编辑于：{format(article.modified_at, 'YYYY年 M月Do日, HH:mm:ss', {locale: zh_CN})}</div>
             </div>
           )}
         />

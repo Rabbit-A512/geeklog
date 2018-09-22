@@ -10,6 +10,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import TagRenderer from '../TagRenderer/TagRenderer';
 import { format } from "date-fns";
 import * as zh_CN from "date-fns/locale/zh_cn/index.js";
+import { Link } from "react-router-dom";
 
 const Meta = Card.Meta;
 const ButtonGroup = Button.Group;
@@ -229,7 +230,12 @@ class FullArticle extends React.Component<IProps> {
               }}
             >
               <h2>{this.props.article.title}</h2>
-              <p>作者：{this.props.article.nickname}</p>
+              <p>
+                <span>作者：</span>
+                <Link to={`/user-home/${this.props.article.article_id}`}>
+                  {this.props.article.nickname}
+                </Link>
+              </p>
             </div>
             <TagRenderer
               tags={this.props.article.tags}
@@ -249,8 +255,8 @@ class FullArticle extends React.Component<IProps> {
                 }}
               >
                 <div>
-                  <div>发布于：{format(this.props.article.created_at, 'YYYY年 MMMM Do, HH:mm:ss', {locale: zh_CN})}</div>
-                  <div>编辑于：{format(this.props.article.modified_at, 'YYYY年 MMMM Do, HH:mm:ss', {locale: zh_CN})}</div>
+                  <div>发布于：{format(this.props.article.created_at, 'YYYY年 M月Do日, HH:mm:ss', {locale: zh_CN})}</div>
+                  <div>编辑于：{format(this.props.article.modified_at, 'YYYY年 M月Do日, HH:mm:ss', {locale: zh_CN})}</div>
                 </div>
                 <ButtonGroup
                   style={{
