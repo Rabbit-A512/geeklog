@@ -38,10 +38,10 @@ class Home extends React.Component<RouteComponentProps<any, StaticContext, any>>
           />
         </Card>
         <Row>
-          <Col span={11} offset={0}>
+          <Col span={6} offset={0}>
             <LatestComments/>
           </Col>
-          <Col span={11} offset={1}>
+          <Col span={17} offset={1}>
             <HostestArticles/>
           </Col>
         </Row>

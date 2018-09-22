@@ -6,6 +6,8 @@ import { getCurrentUser } from "../../utils/auth";
 import { Link } from "react-router-dom";
 import IconText from '../IconText/IconText';
 import TagRenderer from '../TagRenderer/TagRenderer';
+import { format } from 'date-fns';
+import * as zh_CN from 'date-fns/locale/zh_cn/index.js';
 
 const Meta = Card.Meta;
 const Group = Button.Group;
@@ -91,12 +93,32 @@ const articleCard = (props: IArticleCardProps) => {
       ]}
     >
       <Meta
-        avatar={<Avatar icon={'user'}/>}
-        title={article.title}
+        avatar={(
+          <Link to={`/user-home/${article.user_id}`}>
+            <div>
+              <Avatar icon={'user'} size={'large'}/>
+            </div>
+          </Link>
+        )}
+        title={(
+          <div>
+            <h3>{article.title}</h3>
+            <div
+              style={{
+                color: '#666'
+              }}
+            >作者：{article.nickname}</div>
+          </div>
+        )}
         description={(
-          <TagRenderer
-            tags={article.tags}
-          />
+          <div>
+            <TagRenderer
+              tags={article.tags}
+            />
+            <p>{article.content.length > 100 ? article.content.substr(0, 100) + '...' : article.content}</p>
+            <div>发布于：{format(article.created_at, 'YYYY年 MMMM Do, HH:mm:ss', {locale: zh_CN})}</div>
+            <div>编辑于：{format(article.modified_at, 'YYYY年 MMMM Do, HH:mm:ss', {locale: zh_CN})}</div>
+          </div>
         )}
       />
     </Card>

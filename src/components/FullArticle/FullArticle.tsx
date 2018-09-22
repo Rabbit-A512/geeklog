@@ -8,6 +8,8 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { getCurrentUser } from "../../utils/auth";
 import { AxiosError, AxiosResponse } from "axios";
 import TagRenderer from '../TagRenderer/TagRenderer';
+import { format } from "date-fns";
+import * as zh_CN from "date-fns/locale/zh_cn/index.js";
 
 const Meta = Card.Meta;
 const ButtonGroup = Button.Group;
@@ -164,11 +166,14 @@ class FullArticle extends React.Component<IProps> {
       <Card
         title={(
           <div>
-            <h2
+            <div
               style={{
                 textAlign: 'center'
               }}
-            >{this.props.article.title}</h2>
+            >
+              <h2>{this.props.article.title}</h2>
+              <p>作者：{this.props.article.nickname}</p>
+            </div>
             <TagRenderer
               tags={this.props.article.tags}
             />
@@ -183,19 +188,27 @@ class FullArticle extends React.Component<IProps> {
         />
         <Meta
           description={(
-            <ButtonGroup
+            <div
               style={{
-                marginLeft: 'auto'
+                display: 'flex',
+                justifyContent: 'flex-end'
               }}
             >
-              {collectBtn}
-              {likeBtn}
-            </ButtonGroup>
+              <div>
+                <div>发布于：{format(this.props.article.created_at, 'YYYY年 MMMM Do, HH:mm:ss', {locale: zh_CN})}</div>
+                <div>编辑于：{format(this.props.article.modified_at, 'YYYY年 MMMM Do, HH:mm:ss', {locale: zh_CN})}</div>
+              </div>
+              <ButtonGroup
+                style={{
+                  marginLeft: 'auto'
+                }}
+              >
+                {collectBtn}
+                {likeBtn}
+              </ButtonGroup>
+            </div>
           )}
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end'
-          }}
+
         />
       </Card>
     );

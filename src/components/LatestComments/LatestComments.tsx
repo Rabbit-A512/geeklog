@@ -15,7 +15,7 @@ class LatestComments extends React.Component {
 
   public componentDidMount() {
     // hard code the number of the comments displayed on home page to 5
-    server.get('/comments/latest/5')
+    server.get('/comments/latest/10')
       .then((res: AxiosResponse<{ data: Comment[] }>) => {
         console.log(res.data);
         const latestComments = res.data.data;
