@@ -3,7 +3,7 @@ import { Article } from "../../models/article";
 import { Button, Card } from "antd";
 import * as ReactMarkdown from 'react-markdown';
 import CodeBlock from "../CodeBlock/CodeBlock";
-import { getAuthServer } from "../../utils/server";
+import server, { getAuthServer } from "../../utils/server";
 import { RouteComponentProps, withRouter } from "react-router";
 import { getCurrentUser } from "../../utils/auth";
 import { AxiosError, AxiosResponse } from "axios";
@@ -45,6 +45,9 @@ class FullArticle extends React.Component<IProps> {
     authServer.post('/add-star', reqBody)
       .then((res: AxiosResponse) => {
         console.log(res.data);
+        if (res.data.code === 200) {
+          this.loadStarCollectStatus();
+        }
       })
       .catch((error: AxiosError) => {
         console.log(error);
@@ -66,6 +69,9 @@ class FullArticle extends React.Component<IProps> {
     authServer.post('/add-collect', reqBody)
       .then((res: AxiosResponse) => {
         console.log(res.data);
+        if (res.data.code === 200) {
+          this.loadStarCollectStatus();
+        }
       })
       .catch((error: AxiosError) => {
         console.log(error);
@@ -87,6 +93,9 @@ class FullArticle extends React.Component<IProps> {
     authServer.post('/delete-star', reqBody)
       .then((res: AxiosResponse) => {
         console.log(res.data);
+        if (res.data.code === 200) {
+          this.loadStarCollectStatus();
+        }
       })
       .catch((error: AxiosError) => {
         console.log(error);
@@ -108,6 +117,36 @@ class FullArticle extends React.Component<IProps> {
     authServer.post('/delete-collect', reqBody)
       .then((res: AxiosResponse) => {
         console.log(res.data);
+        if (res.data.code === 200) {
+          this.loadStarCollectStatus();
+        }
+      })
+      .catch((error: AxiosError) => {
+        console.log(error);
+      });
+  };
+
+  public loadStarCollectStatus = () => {
+    const currentUser = getCurrentUser();
+    server.get(`/is-starred/${currentUser.user_id}/${this.props.article.article_id}`)
+      .then((res: AxiosResponse) => {
+        if (res.data.code === 200) {
+          this.setState({
+            starred: res.data.data
+          });
+        }
+      })
+      .catch((error: AxiosError) => {
+        console.log(error);
+      });
+
+    server.get(`/is-collected/${currentUser.user_id}/${this.props.article.article_id}`)
+      .then((res: AxiosResponse) => {
+        if (res.data.code === 200) {
+          this.setState({
+            collected: res.data.data
+          });
+        }
       })
       .catch((error: AxiosError) => {
         console.log(error);
@@ -115,7 +154,7 @@ class FullArticle extends React.Component<IProps> {
   };
 
   public componentDidMount() {
-    //
+    this.loadStarCollectStatus();
   }
 
   public render() {
