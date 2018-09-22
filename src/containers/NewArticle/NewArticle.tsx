@@ -6,8 +6,13 @@ import { getAuthServer } from "../../utils/server";
 import { getCurrentUser } from "../../utils/auth";
 import { AxiosError, AxiosResponse } from "axios";
 import { RouteComponentProps } from "react-router";
+import server from "../../utils/server";
 
 class NewArticle extends React.Component<RouteComponentProps> {
+
+  public state = {
+    can_write_article: true
+  };
 
   public submitNewArticle = (article: EditingArticle) => {
     console.log(article);
@@ -30,11 +35,43 @@ class NewArticle extends React.Component<RouteComponentProps> {
       });
   };
 
+  public componentDidMount() {
+    // set can_comment state field
+    const currentUserId = getCurrentUser().user_id;
+    server.get(`/users/${currentUserId}`)
+      .then((res: AxiosResponse) => {
+        if (res.data.code === 200) {
+          this.setState({
+            can_write_article: res.data.data.can_write_article
+          });
+        }
+      })
+      .catch((error: AxiosError) => {
+        console.log(error);
+      });
+  }
+
   public render() {
-    return (
+
+    const editor = this.state.can_write_article ? (
       <Editor
         onArticleChange={this.submitNewArticle}
       />
+    ) : (
+      <p
+        style={{
+          fontSize: 'large',
+          color: 'red'
+        }}
+      >
+        您的写作权限已经被管理员冻结，请联系管理员QQ:2654525303申请解冻。
+      </p>
+    );
+
+    return (
+      <div>
+        {editor}
+      </div>
     );
   }
 }
