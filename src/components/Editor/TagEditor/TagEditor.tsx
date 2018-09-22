@@ -55,8 +55,6 @@ class TagEditor extends React.Component<IProps> {
     this.setState({
       tags: this.props.tags
     });
-    console.log('tags from tag editor', this.props);
-    console.log('state from tag editor', this.state);
   }
 
   public render() {

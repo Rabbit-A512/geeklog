@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Article } from "../../models/article";
-import { Button, Card, Tag } from "antd";
+import { Button, Card } from "antd";
 import Avatar from "antd/lib/avatar";
 import { getCurrentUser } from "../../utils/auth";
 import { Link } from "react-router-dom";
 import IconText from '../IconText/IconText';
-import tagColors from '../../utils/tagColors';
+import TagRenderer from '../TagRenderer/TagRenderer';
 
 const Meta = Card.Meta;
 const Group = Button.Group;
@@ -77,18 +77,9 @@ const articleCard = (props: IArticleCardProps) => {
         avatar={<Avatar icon={'user'}/>}
         title={article.title}
         description={(
-          <span>
-            {article.tags.split(',').map((value: string, index: number) => {
-              return (
-                <Tag
-                  color={tagColors[index % 11]}
-                  key={value}
-                >
-                  {value}
-                </Tag>
-              );
-            })}
-          </span>
+          <TagRenderer
+            tags={article.tags}
+          />
         )}
       />
     </Card>
