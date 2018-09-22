@@ -50,10 +50,13 @@ class RegisterForm extends React.Component<IProps> {
     this.props.form.validateFields((error, values) => {
       if (!error) {
         console.log('Register form value:', values);
-        const axios = getAuthServer();
-        axios.put(`/users/${this.state.user_id}`, values)
+        const authServer = getAuthServer();
+        authServer.put(`/users/${this.state.user_id}`, values)
           .then((res: AxiosResponse) => {
             console.log(res);
+            if (res.data.code === 200) {
+              this.props.history.push(`/feature/user-home/${this.state.user_id}`);
+            }
           })
           .catch((axiosError: AxiosError) => {
             console.log(axiosError);

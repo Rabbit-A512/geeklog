@@ -34,8 +34,8 @@ class ChangePasswordForm extends React.Component<IProps> {
         } else {
           const temp = _.pick(values, ['old_password', 'new_password']);
           const reqBody = {...temp, user_id: user.user_id};
-          const axios = getAuthServer();
-          axios.post('/change-password', reqBody)
+          const authServer = getAuthServer();
+          authServer.post('/change-password', reqBody)
             .then((res: AxiosResponse) => {
               this.props.history.push(`/feature/user-home/${user.user_id}`);
             })
