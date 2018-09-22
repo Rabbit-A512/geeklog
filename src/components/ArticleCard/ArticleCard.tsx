@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Article } from "../../models/article";
-import { Button, Card } from "antd";
+import { Button, Card, Popconfirm } from "antd";
 import Avatar from "antd/lib/avatar";
 import { getCurrentUser } from "../../utils/auth";
 import { Link } from "react-router-dom";
@@ -32,6 +32,22 @@ const articleCard = (props: IArticleCardProps) => {
     </Link>
   ) : null;
 
+  const deleteBtn = canEdit ? (
+    <Popconfirm
+      title={'删除文章同时会删除所有相关评论，该操作无法撤销！'}
+      okText={'确认删除'}
+      cancelText={'取消'}
+    >
+      <Button
+        htmlType={'button'}
+        icon={'delete'}
+        type={'danger'}
+      >
+        删除
+      </Button>
+    </Popconfirm>
+  ) : null;
+
   const extra = (
     <Group>
       <Link to={`/read-article/${article.article_id}`}>
@@ -43,6 +59,7 @@ const articleCard = (props: IArticleCardProps) => {
         </Button>
       </Link>
       {editBtn}
+      {deleteBtn}
     </Group>
   );
 
