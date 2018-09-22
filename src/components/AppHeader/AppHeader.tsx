@@ -41,8 +41,8 @@ class AppHeader extends React.Component<RouteComponentProps> {
           </MenuItem>
           <MenuItem key={'1'}>
             <a onClick={this.logoutHandler}>
-              登出&nbsp;
               <Icon type={'logout'}/>
+              &nbsp;登出
             </a>
           </MenuItem>
         </Menu>
@@ -56,6 +56,7 @@ class AppHeader extends React.Component<RouteComponentProps> {
             }}
           >
             <SafeAvatar
+              size={'default'}
               avatarPath={currentUser.avatar}
             />
             &nbsp;
@@ -68,13 +69,15 @@ class AppHeader extends React.Component<RouteComponentProps> {
       menu = (
         <Menu>
           <MenuItem key={'0'}>
-            <Link to={`/login`}>
-              登录
+            <Link to={'/login'}>
+              <Icon type={'login'}/>
+              &nbsp;登录
             </Link>
           </MenuItem>
           <MenuItem key={'1'}>
             <Link to={'/register'}>
-              注册
+              <Icon type={'user-add'}/>
+              &nbsp;注册
             </Link>
           </MenuItem>
         </Menu>

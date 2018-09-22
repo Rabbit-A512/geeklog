@@ -23,14 +23,20 @@ class LoginForm extends React.Component<IProps> {
       if (!error) {
         console.log('Login form values:', values);
         server.post('/login', values)
-          .then((response: AxiosResponse) => {
-            console.log(response.data);
-            localStorage.setItem('token', response.data.data.token);
-            this.props.history.push('/');
+          .then((res: AxiosResponse) => {
+            switch (res.data.code) {
+              case 200:
+                console.log(res.data);
+                localStorage.setItem('token', res.data.data.token);
+                this.props.history.push('/');
+                break;
+              default:
+                message.error('用户名或密码错误！');
+            }
           })
           .catch((netError: AxiosError) => {
             console.log(netError);
-            message.error('用户名或密码错误！')
+            message.error('用户名或密码错误！');
           });
       }
     });
@@ -48,7 +54,7 @@ class LoginForm extends React.Component<IProps> {
         }}
       >
         <h2>
-          <Icon className={'LoginLogo'} type={'smile'} spin={true}/>
+          <Icon className={'LoginLogo'} type={'smile'}/>
           &nbsp;欢迎
         </h2>
         <FormItem>

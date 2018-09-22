@@ -53,9 +53,10 @@ class RegisterForm extends React.Component<IProps> {
         const authServer = getAuthServer();
         authServer.put(`/users/${this.state.user_id}`, values)
           .then((res: AxiosResponse) => {
-            console.log(res);
-            if (res.data.code === 200) {
-              this.props.history.push(`/feature/user-home/${this.state.user_id}`);
+            switch (res.data.code) {
+              case 200:
+                this.props.history.push(`/feature/user-home/${this.state.user_id}`);
+                break;
             }
           })
           .catch((axiosError: AxiosError) => {

@@ -37,7 +37,27 @@ class ChangePasswordForm extends React.Component<IProps> {
           const authServer = getAuthServer();
           authServer.post('/change-password', reqBody)
             .then((res: AxiosResponse) => {
-              this.props.history.push(`/feature/user-home/${user.user_id}`);
+              switch (res.data.code) {
+                case 200:
+                  this.props.history.push(`/feature/user-home/${user.user_id}`);
+                  break;
+                case 602:
+                  this.props.form.setFields({
+                    'old_password': {
+                      errors: [new Error(res.data.message)]
+                    },
+                    'new_password': {
+                      errors: [new Error(res.data.message)]
+                    }
+                  });
+                  break;
+                case 616:
+                  this.props.form.setFields({
+                    'old_password': {
+                      errors: [new Error(res.data.message)]
+                    }
+                  });
+              }
             })
             .catch((error: AxiosError) => {
               console.log(error);

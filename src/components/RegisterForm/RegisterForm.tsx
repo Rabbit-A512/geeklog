@@ -1,7 +1,7 @@
-import { Button, Card, Form, Icon, Input, message, Tooltip } from "antd";
+import { Button, Card, Form, Icon, Input, Tooltip } from "antd";
 import FormItem from "antd/lib/form/FormItem";
 import * as React from 'react';
-import { FormEvent } from "react";
+import { FormEvent } from 'react';
 import * as _ from 'lodash';
 
 import './RegisterForm.css';
@@ -28,17 +28,33 @@ class RegisterForm extends React.Component<IProps> {
         values = _.omit(values, ['confirm']);
         console.log('Register form value:', values);
         axios.post('/users', values)
-          .then((response: AxiosResponse) => {
-            console.log(response);
-            if (response.data.code === 643) {
-              message.warn('用户已注册');
-              this.props.form.setFields({
-                username: {
-                  errors: ['用户已注册']
-                }
-              });
-            } else {
-              this.props.history.push('/login');
+          .then((res: AxiosResponse) => {
+            console.log(res);
+            switch (res.data.code) {
+              case 200:
+                this.props.history.push('/login');
+                break;
+              case 601:
+                this.props.form.setFields({
+                  'username': {
+                    errors: [new Error(res.data.message)]
+                  }
+                });
+                break;
+              case 602:
+                this.props.form.setFields({
+                  'password': {
+                    errors: [new Error(res.data.message)]
+                  }
+                });
+                break;
+              case 643:
+                this.props.form.setFields({
+                  'username': {
+                    errors: [new Error(res.data.message)]
+                  }
+                });
+                break;
             }
           })
           .catch((axiosError: AxiosError) => {
@@ -174,15 +190,9 @@ class RegisterForm extends React.Component<IProps> {
             </span>
             )}>
             {getFieldDecorator('bio', {
-              initialValue: '尚未填写...',
-              rules: [
-                {
-                  required: true,
-                  message: ''
-                }
-              ]
+              initialValue: '',
             })(
-              <TextArea/>
+              <TextArea placeholder={'A developer.'}/>
             )}
           </FormItem>
           <Button htmlType={'submit'} type={'primary'}>注册</Button>

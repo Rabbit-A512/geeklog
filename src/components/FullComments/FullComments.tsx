@@ -5,14 +5,14 @@ import server from '../../utils/server';
 import { getAuthServer } from "../../utils/server";
 import { AxiosError, AxiosResponse } from "axios";
 import { Comment } from "../../models/comment";
-
+import { RouteComponentProps, withRouter } from "react-router";
 import CommentCard from '../CommentCard/CommentCard';
 import { WrappedFormUtils } from "antd/lib/form/Form";
 import { getCurrentUser } from "../../utils/auth";
 
 const Item = List.Item;
 
-interface IProps{
+interface IProps extends RouteComponentProps{
   article_id: number;
   form: WrappedFormUtils;
   onCommentSendFailure(error: AxiosError): void;
@@ -93,8 +93,12 @@ class FullComments extends React.Component<IProps> {
     this.loadComments(1);
 
     // set can_comment state field
-    const currentUserId = getCurrentUser().user_id;
-    server.get(`/users/${currentUserId}`)
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+      this.props.history.replace('/login');
+      return;
+    }
+    server.get(`/users/${currentUser.user_id}`)
       .then((res: AxiosResponse) => {
         if (res.data.code === 200) {
           this.setState({
@@ -166,6 +170,7 @@ class FullComments extends React.Component<IProps> {
                 }}
               >
                 <CommentCard
+                  show_reply_btn={true}
                   loadRootComments={() => null}
                   show_sub={true}
                   comment={item}
@@ -190,4 +195,4 @@ class FullComments extends React.Component<IProps> {
 
 const wrappedFullComments = Form.create()(FullComments);
 
-export default wrappedFullComments;
+export default withRouter(wrappedFullComments);

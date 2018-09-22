@@ -61,11 +61,12 @@ class UserHome extends React.Component<RouteComponentProps> {
           <Card.Meta
             avatar={(
               <SaveAvatar
+                size={'large'}
                 avatarPath={this.state.user ? this.state.user.avatar : undefined}
               />
             )}
             title={this.state.user ? this.state.user.nickname : 'none'}
-            description={this.state.user ? this.state.user.bio : 'none'}
+            description={this.state.user ? this.state.user.bio : '尚未填写...'}
           />
         </Card>
         <Divider/>

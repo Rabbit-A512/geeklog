@@ -4,7 +4,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { Article } from "../../models/article";
 import { List } from "antd";
 import CategorySelector from "../CategorySelector/CategorySelector";
-import IconText from '../IconText/IconText';
+import ArticleCard from "../ArticleCard/ArticleCard";
 
 class AllArticles extends React.Component {
 
@@ -76,17 +76,9 @@ class AllArticles extends React.Component {
             total: this.state.total
           }}
           renderItem={(item: Article) => (
-            <List.Item
-              actions={[
-                <IconText type={'star-o'} text={`${item.collect_count}`} key={0}/>,
-                <IconText type={'like-o'} text={`${item.star_count}`} key={1}/>,
-                <IconText type={'message-o'} text={`${item.comment_count}`} key={2}/>,
-              ]}
-            >
-              <List.Item.Meta
-                title={item.title}
-                // description={item.content.length > 20 ? item.content.substr(0, 20) + '...' : item.content}
-                description={item.tags}
+            <List.Item>
+              <ArticleCard
+                article={item}
               />
             </List.Item>
           )}

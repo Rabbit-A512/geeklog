@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { RouteComponentProps } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { StaticContext } from "react-router";
-import { Card, Col, Row } from "antd";
+import { Button, Card, Col, Row } from "antd";
 import LatestComments from "../../components/LatestComments/LatestComments";
 import HostestArticles from "../../components/HostestArticles/HostestArticles";
+import AllCategories from "../../components/AllCategories/AllCategories";
 
 const Meta = Card.Meta;
 
@@ -37,15 +38,43 @@ class Home extends React.Component<RouteComponentProps<any, StaticContext, any>>
             }}
           />
         </Card>
+        <Card
+          title={<h2>社区涉及的领域</h2>}
+          extra={(
+            <Link to={'/all-articles'}>
+              <Button
+                htmlType={'button'}
+                size={'large'}
+              >
+                所有文章
+              </Button>
+            </Link>
+          )}
+          style={{
+            marginBottom: '30px'
+          }}
+        >
+          <AllCategories/>
+        </Card>
         <Row>
-          <Col span={6} offset={0}>
+          <Col span={8} offset={0}>
             <LatestComments/>
           </Col>
-          <Col span={17} offset={1}>
+          <Col span={15} offset={1}>
             <HostestArticles/>
           </Col>
         </Row>
+        <p
+          style={{
+            textAlign: 'center',
+            color: '#333',
+            marginTop: '30px'
+          }}
+        >
+          开发团队：云南大学软件学院2015级
+        </p>
       </div>
+
     );
   }
 }

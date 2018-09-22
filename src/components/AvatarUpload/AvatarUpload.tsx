@@ -52,10 +52,14 @@ class AvatarUpload extends React.Component {
 
     return (
       <Card
-        title={'上传新的头像'}
+        title={(
+          <div>
+            <h2>上传新头像</h2>
+            <p>新头像需要重新登录后才能显示正确。</p>
+          </div>
+        )}
         style={{
-          marginTop: '20px',
-          maxWidth: '330px'
+          margin: '20px auto'
         }}
       >
         <Upload
