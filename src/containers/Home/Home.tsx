@@ -10,12 +10,6 @@ const Meta = Card.Meta;
 
 class Home extends React.Component<RouteComponentProps<any, StaticContext, any>> {
 
-  public componentDidMount() {
-    console.log(this.props);
-    // this.props.history.replace('/login');
-    console.log('ls', localStorage.getItem('a'));
-  }
-
   public render() {
     return (
       <div
@@ -30,7 +24,7 @@ class Home extends React.Component<RouteComponentProps<any, StaticContext, any>>
             margin: '30px auto'
           }}
         >
-          <h1 style={{fontSize: '100px'}}>Geeklog</h1>
+          <h1 style={{fontSize: '100px'}}>Geeklog - 极客日志</h1>
           <Meta
             description={'使用Markdown语法，提供流畅的书写体验'}
             style={{
