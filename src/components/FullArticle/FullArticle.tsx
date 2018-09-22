@@ -128,8 +128,10 @@ class FullArticle extends React.Component<IProps> {
   };
 
   public loadStarCollectStatus = () => {
+
+    const article = this.props.article;
     const currentUser = getCurrentUser();
-    server.get(`/is-starred/${currentUser.user_id}/${this.props.article.article_id}`)
+    server.get(`/is-starred/${currentUser.user_id}/${article.article_id}`)
       .then((res: AxiosResponse) => {
         if (res.data.code === 200) {
           this.setState({
@@ -141,7 +143,7 @@ class FullArticle extends React.Component<IProps> {
         console.log(error);
       });
 
-    server.get(`/is-collected/${currentUser.user_id}/${this.props.article.article_id}`)
+    server.get(`/is-collected/${currentUser.user_id}/${article.article_id}`)
       .then((res: AxiosResponse) => {
         if (res.data.code === 200) {
           this.setState({
@@ -202,9 +204,11 @@ class FullArticle extends React.Component<IProps> {
         </Button>
       );
 
-    const articleBody = this.props.article.display ? (
+    const article = this.props.article;
+
+    const articleBody = article.display ? (
       <ReactMarkdown
-        source={this.props.article.content}
+        source={article.content}
         renderers={{
           code: CodeBlock
         }}
@@ -229,16 +233,17 @@ class FullArticle extends React.Component<IProps> {
                 textAlign: 'center'
               }}
             >
-              <h2>{this.props.article.title}</h2>
+              <h2>{article.title}</h2>
+              <p>类别：{article.category_name}</p>
               <p>
                 <span>作者：</span>
-                <Link to={`/user-home/${this.props.article.article_id}`}>
-                  {this.props.article.nickname}
+                <Link to={`/user-home/${article.article_id}`}>
+                  {article.nickname}
                 </Link>
               </p>
             </div>
             <TagRenderer
-              tags={this.props.article.tags}
+              tags={article.tags}
             />
           </div>
         )}
@@ -255,8 +260,8 @@ class FullArticle extends React.Component<IProps> {
                 }}
               >
                 <div>
-                  <div>发布于：{format(this.props.article.created_at, 'YYYY年 M月Do日, HH:mm:ss', {locale: zh_CN})}</div>
-                  <div>编辑于：{format(this.props.article.modified_at, 'YYYY年 M月Do日, HH:mm:ss', {locale: zh_CN})}</div>
+                  <div>发布于：{format(article.created_at, 'YYYY年 M月Do日, HH:mm:ss', {locale: zh_CN})}</div>
+                  <div>编辑于：{format(article.modified_at, 'YYYY年 M月Do日, HH:mm:ss', {locale: zh_CN})}</div>
                 </div>
                 <ButtonGroup
                   style={{
