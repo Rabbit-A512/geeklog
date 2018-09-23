@@ -296,8 +296,9 @@ class CommentCard extends React.Component<IProps> {
           {getFieldDecorator('comment', {
             rules: [
               {
-                required: true,
-                message: '回复不能为空'
+                message: '评论长度需要大于5小于300',
+                min: 5,
+                max: 300
               }
             ]
           })(

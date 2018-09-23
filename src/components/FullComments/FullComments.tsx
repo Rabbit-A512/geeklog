@@ -1,6 +1,6 @@
 import * as React from 'react';
 import TextArea from "antd/lib/input/TextArea";
-import { Button, Card, Divider, Form, List, message, Pagination } from "antd";
+import { Button, Card, Divider, Form, List, Pagination } from "antd";
 import server from '../../utils/server';
 import { getAuthServer } from "../../utils/server";
 import { AxiosError, AxiosResponse } from "axios";
@@ -83,8 +83,6 @@ class FullComments extends React.Component<IProps> {
             console.log(error);
             this.props.onCommentSendFailure(error);
           });
-      } else {
-        message.warn('评论不能为空！');
       }
     });
   };
@@ -122,6 +120,11 @@ class FullComments extends React.Component<IProps> {
             {
               message: '评论不能为空！',
               required: true
+            },
+            {
+              message: '评论长度需要大于5小于300',
+              min: 5,
+              max: 300
             }
           ]
         })(

@@ -31,7 +31,7 @@ class TagEditor extends React.Component<IProps> {
 
   public handleInputChange = (e: any) => {
     this.setState({
-      inputValue: e.target.value
+      inputValue: e.target.value.trim()
     });
   };
 
@@ -83,6 +83,7 @@ class TagEditor extends React.Component<IProps> {
             type={'text'}
             style={{ width: 78 }}
             value={inputValue}
+            maxLength={15}
             onChange={this.handleInputChange}
             onBlur={this.handleInputConfirm}
             onPressEnter={this.handleInputConfirm}

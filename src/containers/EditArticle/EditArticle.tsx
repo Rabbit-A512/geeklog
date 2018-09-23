@@ -64,7 +64,7 @@ class EditArticle extends React.Component<RouteComponentProps> {
       <Editor
         onArticleChange={this.modifyArticle}
         category_id={article.category_id}
-        tags={article.tags.split(',')}
+        tags={article.tags ? article.tags.split(',') : []}
         source={article.content}
         title={article.title}
       />
