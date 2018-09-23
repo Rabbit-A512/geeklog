@@ -190,6 +190,12 @@ class RegisterForm extends React.Component<IProps> {
             )}>
             {getFieldDecorator('bio', {
               initialValue: '',
+              rules: [
+                {
+                  message: '个人简介不能大于255字符',
+                  max: 255
+                }
+              ]
             })(
               <TextArea placeholder={'A developer.'}/>
             )}
