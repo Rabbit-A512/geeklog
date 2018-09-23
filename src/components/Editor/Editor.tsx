@@ -4,7 +4,7 @@ import Input from "antd/lib/input/Input";
 import Form, { WrappedFormUtils } from "antd/lib/form/Form";
 import FormItem from "antd/lib/form/FormItem";
 import Button from "antd/lib/button/button";
-import { Card, Divider, Drawer, Icon, message, Select, Switch, Tabs } from "antd";
+import { Card, Divider, Drawer, Icon, message, Popconfirm, Select, Switch, Tabs } from "antd";
 import * as ReactMarkdown from 'react-markdown';
 import { UnControlled as CodeMirror } from "react-codemirror2";
 import { withRouter } from "react-router";
@@ -51,6 +51,12 @@ console.log('Hello, world!');
 \`\`\`
 
 `
+  };
+
+  public handleClearEditor = () => {
+    this.setState({
+      source: ''
+    });
   };
 
   public categoryChangeHandler = (value: number) => {
@@ -205,16 +211,34 @@ console.log('Hello, world!');
           </div>
           <Tabs
             tabBarExtraContent={(
-              <Button
-                htmlType={'button'}
-                type={'dashed'}
-                onClick={this.showDrawer}
-                style={{
-                  marginBottom: '10px'
-                }}
-              >
-                <Icon type={'sliders'}/>控制面板
-              </Button>
+              <div>
+                <Popconfirm
+                  title={'清空编辑器将清空当前所有文章内容'}
+                  okText={'确认'}
+                  cancelText={'取消'}
+                  onConfirm={this.handleClearEditor}
+                >
+                  <Button
+                    htmlType={'button'}
+                    type={'danger'}
+                    style={{
+                      marginBottom: '10px'
+                    }}
+                  >
+                    <Icon type={'delete'}/>清空编辑器
+                  </Button>
+                </Popconfirm>
+                <Button
+                  htmlType={'button'}
+                  type={'dashed'}
+                  onClick={this.showDrawer}
+                  style={{
+                    marginBottom: '10px'
+                  }}
+                >
+                  <Icon type={'sliders'}/>控制面板
+                </Button>
+              </div>
             )}
             defaultActiveKey={'1'}
             type={'card'}
