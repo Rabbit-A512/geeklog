@@ -37,6 +37,7 @@ class Editor extends React.Component<IProps> {
     // internal editor config
     showDrawer: false,
     lineNumbers: true,
+    lineWrapping: true,
     theme: 'monokai',
 
     // external article input
@@ -118,6 +119,12 @@ console.log('Hello, world!');
     });
   };
 
+  public toggleLineWrappingHandler = (value: boolean) => {
+    this.setState({
+      lineWrapping: value
+    })
+  };
+
   public handleTagsChange = (newTags: string[]) => {
     this.setState({
       tags: newTags
@@ -161,7 +168,13 @@ console.log('Hello, world!');
           }}
         >新的文章</h2>
 
-        <Form onSubmit={this.formSubmitHandler}>
+        <Form
+          onSubmit={this.formSubmitHandler}
+          style={{
+            margin: '10px auto',
+            maxWidth: '900px'
+          }}
+        >
           <FormItem
             label={"标题"}
             style={{
@@ -284,6 +297,15 @@ console.log('Hello, world!');
                     onChange={this.toggleLineNumberHandler}
                   />
                 </div>
+                <Divider>自动折行</Divider>
+                <div>
+                  <span>是否自动折行</span>&nbsp;
+                  <Switch
+                    size={'small'}
+                    defaultChecked={true}
+                    onChange={this.toggleLineWrappingHandler}
+                  />
+                </div>
                 <Divider>标签</Divider>
                 <TagEditor
                   tags={this.state.tags}
@@ -302,6 +324,7 @@ console.log('Hello, world!');
                   mode: 'markdown',
                   theme: this.state.theme,
                   lineNumbers: this.state.lineNumbers,
+                  lineWrapping: this.state.lineWrapping,
                   viewportMargin: Infinity,
                   placeholder: 'Welcome!'
                 }}
