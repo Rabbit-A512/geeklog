@@ -145,9 +145,6 @@ class CommentCard extends React.Component<IProps> {
           onClick={this.showModal}
           icon={'message'}
           htmlType={'button'}
-          style={{
-            marginTop: 10
-          }}
         >
           回复ta
         </Button>
@@ -269,15 +266,25 @@ class CommentCard extends React.Component<IProps> {
                   fontSize: 'medium'
                 }}
               >{comment.content.length > 30 ? comment.content.substr(0, 30) + '...' : comment.content}</p>
-              <p
+              <div
                 style={{
-                  textAlign: 'right'
+                  display: 'flex',
+                  marginBottom: '5px',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
                 }}
-              >{format(comment.created_at, 'YYYY年 M月Do日, HH:mm:ss', {locale: zh_CN})}</p>
+              >
+                <div>
+                  {commentBtn}
+                </div>
+                <div>
+                  {format(comment.created_at, 'YYYY年 M月Do日, HH:mm:ss', {locale: zh_CN})}
+                </div>
+              </div>
             </div>
           )}
         />
-        {commentBtn}
+        {/*{commentBtn}*/}
         <Modal
           title={(
             <span>
