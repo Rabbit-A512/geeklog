@@ -4,7 +4,7 @@ import Input from "antd/lib/input/Input";
 import Form, { WrappedFormUtils } from "antd/lib/form/Form";
 import FormItem from "antd/lib/form/FormItem";
 import Button from "antd/lib/button/button";
-import { Card, Divider, Drawer, Icon, Select, Switch, Tabs } from "antd";
+import { Card, Divider, Drawer, Icon, message, Select, Switch, Tabs } from "antd";
 import * as ReactMarkdown from 'react-markdown';
 import { UnControlled as CodeMirror } from "react-codemirror2";
 import { withRouter } from "react-router";
@@ -80,6 +80,13 @@ console.log('Hello, world!');
         if (!currentUser) {
           this.props.history.replace('/login');
         } else {
+
+          const tags = [...this.state.tags];
+          if (tags.length > 8) {
+            message.warn('最多支持8个标签');
+            return;
+          }
+
           const temp = {
             ...values,
             tags: this.state.tags.join(','),

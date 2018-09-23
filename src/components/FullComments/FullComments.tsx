@@ -122,9 +122,9 @@ class FullComments extends React.Component<IProps> {
               required: true
             },
             {
-              message: '评论长度需要大于5小于300',
+              message: '评论长度需要大于5小于255',
               min: 5,
-              max: 300
+              max: 255
             }
           ]
         })(
