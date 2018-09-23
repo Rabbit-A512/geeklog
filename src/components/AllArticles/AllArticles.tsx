@@ -60,9 +60,10 @@ class AllArticles extends React.Component {
         style={{
           maxWidth: '900px',
           width: '80%',
-          margin: 'auto'
+          margin: '100px auto'
         }}
       >
+        <h2>选择文章分类</h2>
         <CategorySelector
           defaultCategory_id={-1}
           showAllCategories={true}
