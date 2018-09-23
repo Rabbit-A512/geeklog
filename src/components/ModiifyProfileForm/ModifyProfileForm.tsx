@@ -118,7 +118,12 @@ class RegisterForm extends React.Component<IProps> {
                 }
               ]
             })(
-              <TextArea/>
+              <TextArea
+                autosize={{
+                  minRows: 2,
+                  maxRows: 8
+                }}
+              />
             )}
           </FormItem>
           <Button htmlType={'submit'} type={'primary'}>提交</Button>

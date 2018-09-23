@@ -197,7 +197,13 @@ class RegisterForm extends React.Component<IProps> {
                 }
               ]
             })(
-              <TextArea placeholder={'A developer.'}/>
+              <TextArea
+                placeholder={'A developer.'}
+                autosize={{
+                  minRows: 2,
+                  maxRows: 8
+                }}
+              />
             )}
           </FormItem>
           <Button htmlType={'submit'} type={'primary'}>注册</Button>
