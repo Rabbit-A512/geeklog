@@ -10,7 +10,7 @@ function beforeUpload(file: UploadFile) {
     message.error('只能上传jpg, jpeg, png格式的图片！');
   }
 
-  return isJPG
+  return isJPG || isPNG;
 }
 
 class AvatarUpload extends React.Component {
