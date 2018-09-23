@@ -11,6 +11,7 @@ import { WrappedFormUtils } from "antd/lib/form/Form";
 import { getCurrentUser } from "../../utils/auth";
 
 const Item = List.Item;
+const FormItem = Form.Item;
 
 interface IProps extends RouteComponentProps{
   article_id: number;
@@ -115,7 +116,7 @@ class FullComments extends React.Component<IProps> {
 
     const submitComment = this.state.can_comment ? (
       <div>
-        {getFieldDecorator('comment', {
+        {getFieldDecorator('root_comment', {
           rules: [
             {
               message: '评论不能为空！',
@@ -189,7 +190,9 @@ class FullComments extends React.Component<IProps> {
           />
 
           <Divider orientation={'left'}>发表评论</Divider>
-          {submitComment}
+          <FormItem>
+            {submitComment}
+          </FormItem>
         </Card>
       </div>
     );

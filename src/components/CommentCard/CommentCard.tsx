@@ -11,6 +11,7 @@ import * as zh_CN from "date-fns/locale/zh_cn/index.js";
 import SafeAvatar from '../SafeAvatar/SafeAvatar';
 import { RouteComponentProps, withRouter } from "react-router";
 import { Link } from "react-router-dom";
+import FormItem from "antd/lib/form/FormItem";
 
 const Meta = Card.Meta;
 const Item = List.Item;
@@ -293,22 +294,28 @@ class CommentCard extends React.Component<IProps> {
           onOk={this.handleOk}
           onCancel={this.handleCancel}
         >
-          {getFieldDecorator('comment', {
-            rules: [
-              {
-                message: '评论长度需要大于5小于255',
-                min: 5,
-                max: 255
-              }
-            ]
-          })(
-            <TextArea
-              autosize={{
-                minRows: 2,
-                maxRows: 8
-              }}
-            />
-          )}
+          <FormItem>
+            {getFieldDecorator('comment', {
+              rules: [
+                {
+                  message: '评论不能为空',
+                  required: true
+                },
+                {
+                  message: '评论长度需要大于5小于255',
+                  min: 5,
+                  max: 255
+                }
+              ]
+            })(
+              <TextArea
+                autosize={{
+                  minRows: 2,
+                  maxRows: 8
+                }}
+              />
+            )}
+          </FormItem>
         </Modal>
         {subComments}
       </Card>
