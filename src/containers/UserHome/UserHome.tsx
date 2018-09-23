@@ -10,6 +10,7 @@ import CollectArticles from "../../components/CollectArticles/CollectArticles";
 import StarArticles from "../../components/StarArticles/StarArticles";
 import SaveAvatar from '../../components/SafeAvatar/SafeAvatar';
 import OwnArticles from "../../components/OwnArticles/OwnArticle";
+import OwnComments from "../../components/OwnComments/OwnComments";
 
 const TabPane = Tabs.TabPane;
 
@@ -71,17 +72,22 @@ class UserHome extends React.Component<RouteComponentProps> {
         </Card>
         <Divider/>
         <Tabs defaultActiveKey={'0'}>
-          <TabPane tab={'作品'} key={'0'}>
+          <TabPane tab={'评论'} key={'0'}>
+            <OwnComments
+              user_id={(this.props.match.params as any).user_id}
+            />
+          </TabPane>
+          <TabPane tab={'作品'} key={'1'}>
             <OwnArticles
               user_id={(this.props.match.params as any).user_id}
             />
           </TabPane>
-          <TabPane tab={'点赞的文章'} key={'1'}>
+          <TabPane tab={'点赞的文章'} key={'2'}>
             <StarArticles
               user_id={(this.props.match.params as any).user_id}
             />
           </TabPane>
-          <TabPane tab={'收藏的文章'} key={'2'}>
+          <TabPane tab={'收藏的文章'} key={'3'}>
             <CollectArticles
               user_id={(this.props.match.params as any).user_id}
             />

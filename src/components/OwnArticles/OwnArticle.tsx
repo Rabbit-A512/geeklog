@@ -15,7 +15,7 @@ class OwnArticles extends React.Component<IProps> {
   public state = {
     articles: Array<Article>(),
     page: 1,
-    size: 10,
+    size: 5,
     total: 0
   };
 
