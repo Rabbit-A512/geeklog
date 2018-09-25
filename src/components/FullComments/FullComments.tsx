@@ -67,7 +67,7 @@ class FullComments extends React.Component<IProps> {
           user_id: currentUser.user_id,
           article_id: this.props.article_id,
           parent_id: null,
-          content: values.comment
+          content: values.root_comment
         };
 
         const authServer = getAuthServer();
