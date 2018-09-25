@@ -76,9 +76,10 @@ class FullComments extends React.Component<IProps> {
           .then((res: AxiosResponse) => {
             console.log(res);
             this.props.form.setFieldsValue({
-              comment: ''
+              root_comment: ''
             });
-            this.loadComments(1);
+            const page = Math.ceil(this.state.total / this.state.size);
+            this.loadComments(page);
           })
           .catch((error: AxiosError) => {
             console.log(error);
